@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substitute Teacher Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🏫 Substitute Teacher Manager</h1>
+  <p>Automatic substitute allocation from the teacher timetable</p>
+</header>
+<main>
+  <section class="card">
+    <div class="grid">
+      <div>
+        <label class="title">School Day</label>
+        <select id="day"></select>
+      </div>
+      <div>
+        <label class="title">Absent Teacher(s)</label>
+        <div id="absentTeachers" class="teacher-box"></div>
+      </div>
+    </div>
+    <button id="generate">🤖 Generate Substitute Plan</button>
+    <div id="message" class="msg">Select absent teacher(s) and generate a plan.</div>
+  </section>
+
+  <section class="card" id="resultsCard">
+    <h2>Recommended Substitution Plan</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Period</th><th>Class</th><th>Absent Teacher</th><th>Subject</th><th>Substitute</th><th>Reason</th></tr></thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+    <div class="no-print">
+      <button class="green" id="approve">✅ Approve & Save</button>
+      <button class="secondary" id="print">🖨️ Print</button>
+      <button class="secondary" id="export">⬇️ Export CSV</button>
+    </div>
+  </section>
+
+  <section class="two">
+    <section class="card">
+      <h2>👨‍🏫 Teacher Timetable</h2>
+      <select id="teacherView"></select>
+      <div class="table-wrap"><table><thead><tr><th>Period</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead><tbody id="teacherTableBody"></tbody></table></div>
+    </section>
+
+    <section class="card">
+      <h2>🕐 Free Teachers</h2>
+      <div class="two">
+        <select id="freeDay"></select>
+        <select id="freePeriod"></select>
+      </div>
+      <p>Available teachers: <span id="freeCount" class="metric">0</span></p>
+      <div id="freeList"></div>
+    </section>
+  </section>
+
+  <section class="card">
+    <h2>📊 Substitution Workload</h2>
+    <select id="workDay"></select>
+    <div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Approved Substitution Periods</th></tr></thead><tbody id="workloadBody"></tbody></table></div>
+  </section>
+
+  <footer><small>Prototype based on the supplied 2026 teacher summary timetable.</small></footer>
+</main>
+<script src="timetable.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
