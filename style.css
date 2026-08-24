@@ -1,0 +1,22 @@
+
+:root{--navy:#12355b;--blue:#1d70b8;--light:#f4f7fb;--green:#17833b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--light);color:#17202a}
+header{background:linear-gradient(135deg,var(--navy),var(--blue));color:white;padding:22px}
+header h1{margin:0 0 5px;font-size:28px}header p{margin:0;opacity:.9}
+main{max-width:1250px;margin:20px auto;padding:0 15px}
+.card{background:white;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #00000012}
+.grid{display:grid;grid-template-columns:1fr 2fr;gap:18px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+label.title{font-weight:bold;display:block;margin-bottom:8px}
+select,button{font-size:15px;border-radius:8px;padding:10px;border:1px solid #ccd5df}
+select{width:100%;background:white}
+button{cursor:pointer;background:var(--blue);color:white;border:0;font-weight:bold;margin:5px 5px 5px 0}
+button.secondary{background:#5b6773}button.green{background:var(--green)}
+.teacher-box{display:flex;flex-wrap:wrap;gap:8px;max-height:180px;overflow:auto}
+.teacher-chip{background:#eef4fa;border:1px solid #d5e3f0;border-radius:20px;padding:7px 10px;cursor:pointer;font-size:13px}
+.teacher-chip input{margin-right:5px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;background:white}th,td{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}th{background:#eef3f8}
+.free{color:var(--green);font-weight:bold}.free-pill{display:inline-block;padding:7px 10px;background:#eaf7ee;border-radius:18px;margin:4px}
+.metric{font-size:30px;font-weight:bold;color:var(--blue)}.msg{padding:10px;background:#eef6ff;border-radius:8px;margin-top:10px}
+small{color:#64748b}.danger{color:var(--red)}
+@media(max-width:800px){.grid,.two{grid-template-columns:1fr}header h1{font-size:22px}th,td{font-size:13px;padding:7px}}
+@media print{header,.no-print,.card:not(#resultsCard){display:none!important}body{background:white}main{margin:0;max-width:none}.card{box-shadow:none}}
