@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="theme-color" content="#123b2a">
-  <meta name="description" content="ATH Campus Substitute Teacher Manager for the 2026–27 teacher timetable, free-period availability and substitute allocation.">
+  <meta name="description" content="ATH Campus Substitute Teacher Manager 2026–27. Manage teacher absences, free periods, substitute allocations and approved workload.">
 
   <title>ATH Campus | Substitute Teacher Manager 2026–27</title>
 
@@ -14,31 +14,69 @@
 </head>
 
 <body>
-  <header>
+
+  <!-- HEADER -->
+  <header class="main-header">
     <h1>🏫 Substitute Teacher Manager</h1>
     <p>The Trust School — ATH Campus</p>
-    <p>Session 2026–27 | Smart Substitute Allocation</p>
+    <p>Academic Session 2026–27</p>
+    <p class="header-tagline">
+      Smart Timetable Management | Fair Substitute Allocation
+    </p>
   </header>
 
   <main>
-    <!-- DAILY SUBSTITUTE PLANNING -->
-    <section class="card">
-      <h2>Daily Substitute Planning</h2>
+
+    <!-- TIMETABLE INFORMATION -->
+    <section class="card timetable-info">
+      <h2>📅 Weekly Timetable Structure</h2>
 
       <div class="grid">
+        <div>
+          <strong>Monday – Thursday</strong>
+          <p>Zero Period + Periods 1–8</p>
+        </div>
+
+        <div>
+          <strong>Friday</strong>
+          <p>Periods 1–6 | No Zero Period</p>
+        </div>
+      </div>
+
+      <p class="info-note">
+        Substitute allocations must follow the teacher's actual timetable
+        and free-period availability for the selected day.
+      </p>
+    </section>
+
+    <!-- DAILY SUBSTITUTE PLANNING -->
+    <section class="card">
+      <h2>🤖 Daily Substitute Planning</h2>
+
+      <p>
+        Select the school day and mark all absent teachers to generate
+        a recommended substitute plan.
+      </p>
+
+      <div class="grid">
+
         <div>
           <label for="day">School Day</label>
           <select id="day" required></select>
         </div>
 
         <div>
-          <label for="absentTeachers">Select Absent Teacher(s)</label>
+          <label for="absentTeachers">
+            Select Absent Teacher(s)
+          </label>
+
           <div
             id="absentTeachers"
             class="teacher-box"
             aria-label="Absent teachers selection"
           ></div>
         </div>
+
       </div>
 
       <button id="generate" type="button">
@@ -57,10 +95,11 @@
 
     <!-- RECOMMENDED SUBSTITUTION PLAN -->
     <section class="card">
-      <h2>Recommended Substitution Plan</h2>
+      <h2>📋 Recommended Substitution Plan</h2>
 
       <p>
-        Review the suggested allocations before approving the plan.
+        Review all suggested allocations carefully before approving
+        and saving the plan.
       </p>
 
       <div class="table-wrap">
@@ -87,6 +126,7 @@
       </div>
 
       <div class="actions no-print">
+
         <button id="approve" class="green" type="button">
           ✅ Approve &amp; Save
         </button>
@@ -98,11 +138,14 @@
         <button id="export" class="secondary" type="button">
           ⬇️ Export CSV
         </button>
+
       </div>
     </section>
 
-    <!-- TEACHER TIMETABLE AND FREE TEACHERS -->
+    <!-- TEACHER TIMETABLE AND AVAILABILITY -->
     <div class="two">
+
+      <!-- INDIVIDUAL TEACHER TIMETABLE -->
       <section class="card">
         <h2>👨‍🏫 Teacher Timetable</h2>
 
@@ -113,20 +156,32 @@
           <table>
             <thead>
               <tr>
-                <th scope="col">Period</th>
+                <th scope="col">Period / Time</th>
                 <th scope="col">Class / Status</th>
               </tr>
             </thead>
 
-            <tbody id="teacherTableBody"></tbody>
+            <tbody id="teacherTableBody">
+              <tr>
+                <td colspan="2">
+                  Select a teacher to view the timetable.
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </section>
 
+      <!-- AVAILABLE TEACHERS -->
       <section class="card">
         <h2>🕐 Available Teachers</h2>
 
+        <p>
+          Find teachers who are free during a particular period.
+        </p>
+
         <div class="grid">
+
           <div>
             <label for="freeDay">School Day</label>
             <select id="freeDay"></select>
@@ -136,20 +191,30 @@
             <label for="freePeriod">Period</label>
             <select id="freePeriod"></select>
           </div>
+
         </div>
 
         <p>
-          Available teachers:
+          Available Teachers:
           <strong id="freeCount" class="metric">0</strong>
         </p>
 
-        <div id="freeList" aria-live="polite"></div>
+        <div
+          id="freeList"
+          aria-live="polite"
+        ></div>
       </section>
+
     </div>
 
     <!-- APPROVED SUBSTITUTION WORKLOAD -->
     <section class="card">
       <h2>📊 Substitution Workload</h2>
+
+      <p>
+        Monitor the number of approved substitution periods assigned
+        to each teacher.
+      </p>
 
       <label for="workDay">Select Day</label>
       <select id="workDay"></select>
@@ -163,27 +228,61 @@
             </tr>
           </thead>
 
-          <tbody id="workloadBody"></tbody>
+          <tbody id="workloadBody">
+            <tr>
+              <td colspan="2">
+                Approved workload will appear here.
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </section>
 
-    <footer>
-      <p>
-        <strong>The Trust School — ATH Campus</strong>
-      </p>
-      <p>
-        Session 2026–27 | Based on the uploaded Teachers Free Periods
-        timetable.
-      </p>
-      <p>
-        Verify teacher availability and class assignments before final approval.
-      </p>
-    </footer>
+    <!-- ADMINISTRATIVE GUIDANCE -->
+    <section class="card guidance">
+      <h2>📌 Administrative Guidelines</h2>
+
+      <ul>
+        <li>Check the actual timetable before assigning a substitute.</li>
+        <li>Do not assign a teacher who already has a class in that period.</li>
+        <li>Consider the teacher's existing substitution workload.</li>
+        <li>Verify class, subject and period details before approval.</li>
+        <li>Approve and save the final plan for record keeping.</li>
+      </ul>
+    </section>
+
   </main>
 
-  <!-- Keep all application files in the same repository folder. -->
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      <strong>The Trust School — ATH Campus</strong>
+    </p>
+
+    <p>
+      Substitute Teacher Manager | Academic Session 2026–27
+    </p>
+
+    <p>
+      Based on the approved teacher-wise timetable.
+    </p>
+
+    <p>
+      Verify teacher availability and class assignments before
+      final approval.
+    </p>
+  </footer>
+
+  <!-- APPLICATION FILES -->
   <script src="timetable.js"></script>
   <script src="app.js"></script>
+
+  <noscript>
+    <p>
+      JavaScript must be enabled to use the Substitute Teacher Manager.
+    </p>
+  </noscript>
+
 </body>
 </html>
