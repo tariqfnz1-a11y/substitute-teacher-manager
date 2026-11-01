@@ -9,7 +9,60 @@
 
   <title>ATH Campus | Substitute Teacher Manager 2026–27</title>
 
-  <link rel="stylesheet" href="style.css">
+  <style>
+:root{--navy:#123b2a;--navy-dark:#09291d;--green:#17833b;--green-light:#eaf7ee;--blue:#1d70b8;--blue-light:#eef6ff;--light:#f3f6f4;--white:#fff;--text:#24332b;--muted:#64748b;--border:#dce5df;--red:#b42318;--shadow:0 3px 14px rgba(0,0,0,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--text);line-height:1.6}
+header{background:linear-gradient(135deg,var(--navy-dark),var(--navy),var(--green));color:var(--white);text-align:center;padding:28px 18px}
+header h1{margin:0 0 8px;font-size:29px;font-weight:700;letter-spacing:.3px}
+header p{margin:3px 0;opacity:.94}
+.header-tagline{font-size:14px;margin-top:10px;letter-spacing:.5px}
+main{max-width:1300px;margin:24px auto;padding:0 18px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card h2{color:var(--navy);font-size:21px;margin:0 0 14px;padding-bottom:10px;border-bottom:2px solid #e8efe9}
+.card p{margin-top:8px}
+.timetable-info{background:#f7fbf8;border-left:5px solid var(--green)}
+.timetable-info .grid>div{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px 15px}
+.timetable-info strong{color:var(--navy)}
+.info-note{color:var(--muted);font-size:13px;margin-bottom:0}
+.grid{display:grid;grid-template-columns:1fr 2fr;gap:18px;align-items:start}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+label{display:block;font-weight:600;margin-bottom:7px;color:var(--navy);font-size:14px}
+select{width:100%;background:var(--white);color:var(--text);font-size:14px;border:1px solid #cbd5d0;border-radius:8px;padding:11px 12px;min-height:42px;outline:none}
+select:focus,button:focus-visible,input:focus-visible{outline:3px solid rgba(29,112,184,.25);outline-offset:2px}
+select:hover{border-color:var(--green)}
+button{cursor:pointer;background:var(--green);color:var(--white);border:none;border-radius:8px;padding:11px 17px;margin:8px 6px 5px 0;font-size:14px;font-weight:700;transition:background .2s,transform .2s}
+button:hover{background:var(--navy);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+button.secondary{background:#586875}button.secondary:hover{background:#344552}
+button.green{background:var(--green)}button.green:hover{background:#10652d}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.teacher-box{display:flex;flex-wrap:wrap;gap:9px;max-height:190px;overflow-y:auto;padding:10px;background:#f8faf9;border:1px solid var(--border);border-radius:10px}
+.teacher-chip{display:inline-flex;align-items:center;gap:5px;background:#edf5ef;border:1px solid #c9dfcf;border-radius:20px;padding:7px 11px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text);margin:0;transition:.2s}
+.teacher-chip:hover{background:#dcefe1;border-color:var(--green)}
+.teacher-chip input{accent-color:var(--green);margin:0}
+.msg{padding:12px 15px;background:var(--blue-light);border-left:4px solid var(--blue);border-radius:8px;margin-top:14px;font-size:14px;color:#16466d}
+.table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:9px;margin-top:12px}
+table{width:100%;min-width:550px;border-collapse:collapse;background:var(--white)}
+th,td{padding:11px 12px;border-bottom:1px solid #e5ebe7;text-align:left;vertical-align:middle;font-size:13px}
+th{background:#eaf1ec;color:var(--navy);font-weight:700;white-space:nowrap}
+tbody tr:hover{background:#f7faf8}tbody tr:last-child td{border-bottom:none}
+td select{min-width:145px;padding:7px;font-size:13px}
+.free{display:inline-block;color:var(--green);background:var(--green-light);border-radius:5px;padding:3px 8px;font-weight:700;font-size:12px}
+.free-pill{display:inline-block;padding:7px 12px;background:var(--green-light);border:1px solid #c8e6d0;border-radius:20px;margin:4px;color:#12652d;font-size:13px;font-weight:600}
+.metric{display:inline-block;font-size:28px;font-weight:700;color:var(--green);margin-left:5px}
+.guidance{background:#f9fbfa}.guidance ul{padding-left:22px;margin-bottom:0}.guidance li{padding:4px 0;font-size:14px}
+footer{background:var(--navy-dark);color:var(--white);text-align:center;padding:22px 15px;margin-top:30px}
+footer p{margin:5px 0;font-size:13px;opacity:.92}
+small{color:var(--muted)}.danger{color:var(--red)}
+.bell-times{color:var(--muted);font-size:12.5px;line-height:1.55;margin:6px 0 0}
+.timetable-info .grid{grid-template-columns:1fr 1fr}
+.two .grid{grid-template-columns:1fr 1fr;margin-bottom:4px}
+.reason-cell{color:var(--muted);min-width:150px}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
+@media(max-width:600px){header{padding:22px 12px}header h1{font-size:22px}header p{font-size:13px}main{margin:14px auto;padding:0 10px}.card{padding:15px;margin-bottom:14px;border-radius:11px}.card h2{font-size:18px}.grid,.two,.timetable-info .grid,.two .grid{grid-template-columns:1fr;gap:12px}button{width:100%;margin:5px 0}.actions{display:block}.teacher-box{max-height:220px}th,td{font-size:12px;padding:8px}.metric{font-size:24px}}
+@media print{@page{size:landscape;margin:12mm}body{background:#fff;color:#000;font-size:11px}header{background:#fff!important;color:#000!important;padding:10px;border-bottom:2px solid #000}header h1{font-size:20px}main{max-width:none;margin:8px 0;padding:0}.card{display:none!important;box-shadow:none;border:none}.card:has(#resultsBody){display:block!important}.no-print{display:none!important}.table-wrap{overflow:visible;border:none}table{width:100%;min-width:0}th,td{border:1px solid #999;color:#000;font-size:10px;padding:7px}th{background:#e8e8e8!important}select{border:none;appearance:none;color:#000}footer{display:none}}
+</style>
 </head>
 
 <body>
@@ -300,15 +353,23 @@
     </p>
   </footer>
 
-  <!-- APPLICATION FILES: timetable.js must load once, before app.js -->
-  <script src="timetable.js"></script>
-  <script src="app.js"></script>
-
-  <noscript>
-    <p>
-      JavaScript must be enabled to use the Substitute Teacher Manager.
-    </p>
-  </noscript>
-
-</body>
-</html>
+  <!-- TIMETABLE DATA (F = free, - = no period, Class/Subject = teaching) -->
+  <script>
+var TT=[
+ ["Mr Ahsan Ali",27,"F;9A/Math;Pre-9A/Math;6B/Math;F;10B/Math;6B/Math;F;F|9A/Math;9A/Math;Pre-9A/Math;6B/Math;F;10B/Math;F;F;7B/Computer|F;9A/Math;Pre-9A/Math;6B/Math;F;10B/Math;F;10B/Math;7B/Computer|Pre-9A/Math;9A/Math;Pre-9A/Math;6B/Math;F;10B/Math;F;F;7B/Computer|-;9A/Math;Pre-9A/Math;6B/Math;F;10B/Math;F;-;-"],
+ ["Mr Ahsan Saddique",27,"F;9E/Math;7C/Math;7C/Math;F;7D/Math;F;10A/Math;F|9E/Math;9E/Math;7C/Math;F;F;7D/Math;7C/Computer;10A/Math;F|10A/Math;9E/Math;7C/Math;7D/Math;F;7D/Math;7C/Computer;F;10A/Math|10A/Math;9E/Math;7C/Math;F;10A/Math;7D/Math;7C/Computer;F;F|-;9E/Math;7C/Math;F;F;7D/Math;F;-;-"],
+ ["Ms Amal",25,"9A/Biology;F;F;Pre-9A/Biology;7A/Science;6E/Science;10A/Biology;F;9A/Biology|F;F;F;Pre-9A/Biology;7A/Science;6E/Science;10A/Biology;F;9A/Biology|F;F;F;Pre-9A/Biology;7A/Science;6E/Science;10A/Biology;F;9A/Biology|F;F;F;Pre-9A/Biology;7A/Science;6E/Science;10A/Biology;F;9A/Biology|-;F;7A/Science;Pre-9A/Biology;F;6E/Science;10A/Biology;-;-"],
+ ["Ms Andleeb",25,"F;F;Pre-9B/Computer;9E/Computer;9B/Computer;Pre-9E/Computer;10C/Computer;F;F|F;F;Pre-9B/Computer;9E/Computer;9B/Computer;Pre-9E/Computer;10C/Computer;F;F|F;F;Pre-9B/Computer;9E/Computer;9B/Computer;Pre-9E/Computer;10C/Computer;F;F|F;F;Pre-9B/Computer;9E/Computer;9B/Computer;Pre-9E/Computer;10C/Computer;F;F|-;F;Pre-9B/Computer;9E/Computer;9B/Computer;Pre-9E/Computer;10C/Computer;-;-"],
+ ["Ms Asia",29,"F;6C/English;6E/English;9D/English;F;Pre-9C/English;F;F;6C/S.Studies|F;6C/English;6E/English;9D/English;F;Pre-9C/English;10B/English;10B/English;6C/S.Studies|F;6C/English;6E/English;9D/English;Pre-9C/English;F;10B/English;F;6C/S.Studies|F;6C/English;6E/English;9D/English;F;Pre-9C/English;10B/English;F;6C/S.Studies|-;6C/English;6E/English;9D/English;F;Pre-9C/English;10B/English;-;-"],
+ ["Mr Asif Ali",30,"F;Pre-9C/Math;F;9C/Math;6F/Math;6F/Math;6C/Math;6A/Math;F|9C/Math;Pre-9C/Math;F;9C/Math;6A/Math;6F/Math;6C/Math;6C/Math;F|F;Pre-9C/Math;Pre-9C/Math;F;6A/Math;6F/Math;6C/Math;F;F|F;Pre-9C/Math;F;9C/Math;6A/Math;6F/Math;6C/Math;6A/Math;9C/Math|-;Pre-9C/Math;F;9C/Math;6A/Math;6F/Math;6C/Math;-;-"],
+ ["Mr Asif Majeed",27,"Pre-9E/Math;10C/Math;F;6E/Math;F;7E/Math;Pre-9E/Math;F;F|F;10C/Math;F;F;Pre-9E/Math;7E/Math;6E/Math;10C/Math;7E/Computer|F;10C/Math;F;F;Pre-9E/Math;7E/Math;6E/Math;F;7E/Computer|F;10C/Math;7E/Math;F;Pre-9E/Math;7E/Math;6E/Math;F;7E/Computer|-;10C/Math;F;6E/Math;Pre-9E/Math;7E/Math;6E/Math;-;-"],
+ ["Ms Farkhanda",29,"10A/English;6D/English;6D/S.Studies;F;F;9C/English;Pre-9B/English;6D/S.Studies;7A/English|F;6D/English;10A/English;7A/English;F;9C/English;Pre-9B/English;F;Pre-9B/English|Pre-9B/English;6D/English;10A/English;F;F;9C/English;F;6D/S.Studies;7A/English|F;6D/English;10A/English;F;F;9C/English;Pre-9B/English;F;7A/English|-;6D/English;10A/English;7A/English;6D/S.Studies;9C/English;F;-;-"],
+ ["Ms Fatima",29,"9D/Physics;9D/Physics;Pre-9E/Physics;F;9A/Physics;F;9A/Physics;Pre-9C/Physics;Pre-9E/Physics|Pre-9C/Physics;9D/Physics;Pre-9E/Physics;F;9A/Physics;10C/Physics;F;Pre-9C/Physics;10C/Physics|Pre-9E/Physics;9D/Physics;Pre-9E/Physics;F;9A/Physics;10C/Physics;F;Pre-9C/Physics;Pre-9C/Physics|F;9D/Physics;F;F;9A/Physics;F;F;Pre-9C/Physics;10C/Physics|-;9D/Physics;Pre-9E/Physics;F;9A/Physics;10C/Physics;F;-;-"],
+ ["Ms Fozia",29,"F;6A/English;6F/English;9A/English;10C/English;Pre-9A/English;F;F;6A/S.Studies|F;6A/English;6F/English;9A/English;10C/English;Pre-9A/English;F;F;6A/S.Studies|F;6A/English;6F/English;9A/English;F;Pre-9A/English;F;10C/English;6A/S.Studies|F;6A/English;6F/English;9A/English;F;Pre-9A/English;F;10C/English;6A/S.Studies|-;6A/English;6F/English;9A/English;10C/English;Pre-9A/English;F;-;-"],
+ ["Mr Hafiz Asif",27,"Pre-9C/TQ;F;Pre-9C/TQ;9B/Islamiat;F;Pre-9D/Islamiat;F;10C/TQ;9E/Islamiat|F;F;9B/TQ;10C/TQ;F;Pre-9D/Islamiat;F;9B/Islamiat;9E/Islamiat|9E/Islamiat;F;9B/TQ;9B/Islamiat;10C/TQ;Pre-9C/TQ;F;9B/Islamiat;9E/Islamiat|F;F;9B/TQ;Pre-9C/TQ;10C/TQ;Pre-9D/Islamiat;F;9B/Islamiat;9E/Islamiat|-;F;9B/TQ;F;Pre-9D/Islamiat;Pre-9D/Islamiat;F;-;-"],
+ ["Mr Hamza",28,"Pre-9D/Physics;7E/Science;Pre-9D/Physics;F;Pre-9B/Physics;F;9C/Physics;F;10A/Physics|10A/Physics;7E/Science;Pre-9D/Physics;F;Pre-9B/Physics;F;9C/Physics;F;10A/Physics|F;7E/Science;Pre-9D/Physics;F;Pre-9B/Physics;F;9C/Physics;9C/Physics;Pre-9B/Physics|F;7E/Science;Pre-9D/Physics;F;Pre-9B/Physics;F;9C/Physics;10A/Physics;10A/Physics|-;7E/Science;Pre-9D/Physics;F;Pre-9B/Physics;F;9C/Physics;-;-"],
+ ["Mr Imtiaz",31,"9B/Chemistry;F;7D/Science;10A/Chemistry;7C/Science;10A/Chemistry;Pre-9A/Chemistry;6B/Science;F|9B/Chemistry;F;7D/Science;9B/Chemistry;7C/Science;10A/Chemistry;Pre-9A/Chemistry;6B/Science;F|9B/Chemistry;F;7D/Science;F;7C/Science;10A/Chemistry;Pre-9A/Chemistry;6B/Science;F|9B/Chemistry;F;7D/Science;F;7C/Science;10A/Chemistry;Pre-9A/Chemistry;6B/Science;6B/Science|-;F;7D/Science;F;7C/Science;10A/Chemistry;Pre-9A/Chemistry;-;-"],
+ ["Ms Ismat",24,"F;9B/Math;9B/Math;Pre-9B/Math;F;7B/Math;F;10D/Math;Pre-9B/Math|10D/Math;9B/Math;7B/Math;Pre-9B/Math;F;7B/Math;F;10D/Math;F|F;9B/Math;F;Pre-9B/Math;F;7B/Math;F;10D/Math;F|10D/Math;9B/Math;F;Pre-9B/Math;F;7B/Math;F;10D/Math;F|-;9B/Math;F;Pre-9B/Math;F;F;7B/Math;-;-"],
+ ["Mr Kaleem",18,"F;F;F;F;Pre-9E/Sports;F;9B/Sports;9E/Sports;F|F;F;7E/S.D;7C/S.D;Pre-9C/Sports;Pre-9B/Sports;7B/S.D;9C/Sports;F|F;F;F;F;F;Pre-9D/Sports;9A/Sports;F;F|F;F;9D/Sports;F;Pre-9A/Sports;F;7D/S.D;6F/Sports;F|-;F;6D/Sports;F;6E/Sports;F;7A/S.D;-;-"],
+ ["Mr Kamran",26,"F;F;F;7D/S.Studies;10D/P.Studies;F;7E/S.Studies;7C/S.Studies;10B/P.Studies|10B/P.Studies;F;F;7D/S.Studies;10D/P.Studies;F;F;7C/S.Studies;10B/P.Studies|F;F;7B/S.Studies;F;10D/P.Studies;F;7E/S.Studies;7C/S.Studies;10B/P.Studies|F;F;7B/S.Studies;7D/S.Studies;10D/P.Studies;F;7E/S.Studies;7C/S.Studies;10B/P.Studies|-;F;7B/S.Studies;7D/S.Studies;10D/P.Studies;7B/S.Studies;7E/S.Studies;-;-"],
+ ["Mr
