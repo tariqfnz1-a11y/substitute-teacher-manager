@@ -1,445 +1,421 @@
-/**
- * Teacher-wise Timetable Data (Session 2026-27)
- * The Trust School | ATH Campus
- */
-
-const TIMETABLE_DATA = {
-  school: "THE TRUST SCHOOL",
-  campus: "ATH CAMPUS",
+// Teacher-wise Timetable 2026-27 - The Trust School, ATH Campus
+// Slot values: null = no period, "Free" = free period, [class, subject] = teaching period
+const TIMETABLE = {
+  school: "The Trust School - ATH Campus",
   session: "2026-27",
-  status: "Corrected",
-  bellTimes: {
-    monToThu: {
-      assembly: "8:45-8:55",
-      zeroPeriod: "8:55-9:25",
-      periods1to4: "9:25-11:25",
-      break: "11:25-11:45",
-      periods5to8: "11:45-1:35",
-      dispersal: "1:35",
-      note: "P7 and P8 are 25 min"
-    },
-    friday: {
-      assembly: "8:45-8:55",
-      p1: "8:55-9:30",
-      p2: "9:30-10:05",
-      p3to4: "10:05-11:05",
-      break: "11:05-11:30",
-      p5to6: "11:30-12:30",
-      dispersal: "12:30"
-    }
-  },
+  days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  periods: ["Zero", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"],
+  bellTimes: {"Monday-Thursday": {"Assembly": "8:45-8:55", "Zero": "8:55-9:25", "P1-P4": "9:25-11:25", "Break": "11:25-11:45", "P5-P8": "11:45-1:35 (P7, P8 are 25 min)", "Dispersal": "1:35"}, "Friday": {"Assembly": "8:45-8:55", "P1": "8:55-9:30", "P2": "9:30-10:05", "P3-P4": "10:05-11:05", "Break": "11:05-11:30", "P5-P6": "11:30-12:30", "Dispersal": "12:30"}},
+  notes: ["Adjustments applied to the original PDFs", "Lesson positions are exactly as in the original class-wise PDF (period numbers from its source table). Nothing was re-timetabled; only the corrections below, the break position and the bell times were changed.", "6F Wednesday P7 Computer: teacher corrected to Mr Shahbaz. The original showed \"Shabnaz\" (class PDF) and Shahnaz (teacher PDF); Shahnaz was also teaching 7B Urdu at that time, which caused a clash.", "6A Friday P6, 6C Friday P2: Art (Ms Uzma), as in the class PDF. The old teacher-PDF table wrongly showed T.Q.", "7A Friday P4: Art (Ms Uzma). The old teacher-PDF table showed a second Science (Ms Amal).", "7E Friday P2: Islamiat (Ms Rehana) restored; it was missing from the old teacher-PDF table. The total is now 1,006 lessons.", "Teacher loads now match the workload headers (for example Shahbaz 18, Shahnaz 28, Uzma 23, Rehana 26, Amal 25), and no teacher is in two classes at once.", "The break now follows Period 4 on every day, as in the School Bell Timetable 2026 (11:25-11:45 Monday-Thursday, 11:05-11:30 Friday). In the old PDFs it was drawn after Period 3. Bell times are listed at the foot", "of each page.", "AQ and T.Q are treated as one subject (TQ). Spellings are standardised and cut-off or reversed entries (hem, hy, BMaths, Talib (Sports), Kamran (S.St)) are repaired. The blank slots lost in the old teacher PDF", "are shown again.", "Not changed: repeated subjects on the same day and back-to-back lessons are as in the original arrangement.", "To confirm: Mr/Ms for Asia, Sabiha, Waseem Abbas and Waseem Israr is assumed, and \"New English Teacher\" is a placeholder."],
   teachers: [
     {
       name: "Mr Ahsan Ali",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["Free", "9A Math", "9A Math", "9A Math", "Pre-9A Math", "Pre-9A Math", "6B Math", "6B Math", "Free", "Free"],
-        Tuesday: ["Free", "9A Math", "9A Math", "9A Math", "Pre-9A Math", "Pre-9A Math", "6B Math", "6B Math", "Free", "Free"],
-        Wednesday: ["Free", "9A Math", "Pre-9A Math", "6B Math", "Free", "BREAK", "10B Math", "Free", "10B Math", "7B Computer"],
-        Thursday: ["Pre-9A Math", "9A Math", "Pre-9A Math", "6B Math", "Free", "BREAK", "10B Math", "Free", "Free", "7B Computer"],
-        Friday: ["", "9A Math", "Pre-9A Math", "6B Math", "Free", "BREAK", "10B Math", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["9A", "Math"], P2: ["Pre-9A", "Math"], P3: ["6B", "Math"], P4: "Free", P5: ["10B", "Math"], P6: ["6B", "Math"], P7: "Free", P8: "Free" },
+        Tuesday: { Zero: ["9A", "Math"], P1: ["9A", "Math"], P2: ["Pre-9A", "Math"], P3: ["6B", "Math"], P4: "Free", P5: ["10B", "Math"], P6: "Free", P7: "Free", P8: ["7B", "Computer"] },
+        Wednesday: { Zero: "Free", P1: ["9A", "Math"], P2: ["Pre-9A", "Math"], P3: ["6B", "Math"], P4: "Free", P5: ["10B", "Math"], P6: "Free", P7: ["10B", "Math"], P8: ["7B", "Computer"] },
+        Thursday: { Zero: ["Pre-9A", "Math"], P1: ["9A", "Math"], P2: ["Pre-9A", "Math"], P3: ["6B", "Math"], P4: "Free", P5: ["10B", "Math"], P6: "Free", P7: "Free", P8: ["7B", "Computer"] },
+        Friday: { Zero: null, P1: ["9A", "Math"], P2: ["Pre-9A", "Math"], P3: ["6B", "Math"], P4: "Free", P5: ["10B", "Math"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Mr Ahsan Saddique",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["Free", "9E Math", "7C Math", "7C Math", "Free", "BREAK", "7D Math", "Free", "10A Math", "Free"],
-        Tuesday: ["9E Math", "9E Math", "7C Math", "Free", "Free", "BREAK", "7D Math", "7C Computer", "10A Math", "Free"],
-        Wednesday: ["10A Math", "9E Math", "7C Math", "7D Math", "Free", "BREAK", "7D Math", "7C Computer", "Free", "10A Math"],
-        Thursday: ["10A Math", "9E Math", "7C Math", "Free", "10A Math", "BREAK", "7D Math", "7C Computer", "Free", "Free"],
-        Friday: ["", "9E Math", "7C Math", "Free", "Free", "BREAK", "7D Math", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["9E", "Math"], P2: ["7C", "Math"], P3: ["7C", "Math"], P4: "Free", P5: ["7D", "Math"], P6: "Free", P7: ["10A", "Math"], P8: "Free" },
+        Tuesday: { Zero: ["9E", "Math"], P1: ["9E", "Math"], P2: ["7C", "Math"], P3: "Free", P4: "Free", P5: ["7D", "Math"], P6: ["7C", "Computer"], P7: ["10A", "Math"], P8: "Free" },
+        Wednesday: { Zero: ["10A", "Math"], P1: ["9E", "Math"], P2: ["7C", "Math"], P3: ["7D", "Math"], P4: "Free", P5: ["7D", "Math"], P6: ["7C", "Computer"], P7: "Free", P8: ["10A", "Math"] },
+        Thursday: { Zero: ["10A", "Math"], P1: ["9E", "Math"], P2: ["7C", "Math"], P3: "Free", P4: ["10A", "Math"], P5: ["7D", "Math"], P6: ["7C", "Computer"], P7: "Free", P8: "Free" },
+        Friday: { Zero: null, P1: ["9E", "Math"], P2: ["7C", "Math"], P3: "Free", P4: "Free", P5: ["7D", "Math"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Amal",
       weeklyLoad: 25,
-      schedule: {
-        Monday: ["9A Biology", "Free", "Free", "Pre-9A Biology", "7A Science", "BREAK", "6E Science", "10A Biology", "Free", "9A Biology"],
-        Tuesday: ["Free", "Free", "Free", "Pre-9A Biology", "7A Science", "BREAK", "6E Science", "10A Biology", "Free", "9A Biology"],
-        Wednesday: ["Free", "Free", "Free", "Pre-9A Biology", "7A Science", "BREAK", "6E Science", "10A Biology", "Free", "9A Biology"],
-        Thursday: ["Free", "Free", "Free", "Pre-9A Biology", "7A Science", "BREAK", "6E Science", "10A Biology", "Free", "9A Biology"],
-        Friday: ["", "Free", "7A Science", "Pre-9A Biology", "Free", "BREAK", "6E Science", "10A Biology", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["9A", "Biology"], P1: "Free", P2: "Free", P3: ["Pre-9A", "Biology"], P4: ["7A", "Science"], P5: ["6E", "Science"], P6: ["10A", "Biology"], P7: "Free", P8: ["9A", "Biology"] },
+        Tuesday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["Pre-9A", "Biology"], P4: ["7A", "Science"], P5: ["6E", "Science"], P6: ["10A", "Biology"], P7: "Free", P8: ["9A", "Biology"] },
+        Wednesday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["Pre-9A", "Biology"], P4: ["7A", "Science"], P5: ["6E", "Science"], P6: ["10A", "Biology"], P7: "Free", P8: ["9A", "Biology"] },
+        Thursday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["Pre-9A", "Biology"], P4: ["7A", "Science"], P5: ["6E", "Science"], P6: ["10A", "Biology"], P7: "Free", P8: ["9A", "Biology"] },
+        Friday: { Zero: null, P1: "Free", P2: ["7A", "Science"], P3: ["Pre-9A", "Biology"], P4: "Free", P5: ["6E", "Science"], P6: ["10A", "Biology"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Andleeb",
       weeklyLoad: 25,
-      schedule: {
-        Monday: ["Free", "Free", "Pre-9B Computer", "9E Computer", "9B Computer", "BREAK", "Pre-9E Computer", "10C Computer", "Free", "Free"],
-        Tuesday: ["Free", "Free", "Pre-9B Computer", "9E Computer", "9B Computer", "BREAK", "Pre-9E Computer", "10C Computer", "Free", "Free"],
-        Wednesday: ["Free", "Free", "Pre-9B Computer", "9E Computer", "9B Computer", "BREAK", "Pre-9E Computer", "10C Computer", "Free", "Free"],
-        Thursday: ["Free", "Free", "Pre-9B Computer", "9E Computer", "9B Computer", "BREAK", "Pre-9E Computer", "10C Computer", "Free", "Free"],
-        Friday: ["Free", "Free", "Pre-9B Computer", "9E Computer", "9B Computer", "BREAK", "Pre-9E Computer", "10C Computer", "Free", "Free"]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: ["Pre-9B", "Computer"], P3: ["9E", "Computer"], P4: ["9B", "Computer"], P5: ["Pre-9E", "Computer"], P6: ["10C", "Computer"], P7: "Free", P8: "Free" },
+        Tuesday: { Zero: "Free", P1: "Free", P2: ["Pre-9B", "Computer"], P3: ["9E", "Computer"], P4: ["9B", "Computer"], P5: ["Pre-9E", "Computer"], P6: ["10C", "Computer"], P7: "Free", P8: "Free" },
+        Wednesday: { Zero: "Free", P1: "Free", P2: ["Pre-9B", "Computer"], P3: ["9E", "Computer"], P4: ["9B", "Computer"], P5: ["Pre-9E", "Computer"], P6: ["10C", "Computer"], P7: "Free", P8: "Free" },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["Pre-9B", "Computer"], P3: ["9E", "Computer"], P4: ["9B", "Computer"], P5: ["Pre-9E", "Computer"], P6: ["10C", "Computer"], P7: "Free", P8: "Free" },
+        Friday: { Zero: null, P1: "Free", P2: ["Pre-9B", "Computer"], P3: ["9E", "Computer"], P4: ["9B", "Computer"], P5: ["Pre-9E", "Computer"], P6: ["10C", "Computer"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Asia",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Free", "6C English", "6E English", "9D English", "Free", "BREAK", "Pre-9C English", "Free", "Free", "6C S.Studies"],
-        Tuesday: ["Free", "6C English", "6E English", "9D English", "Free", "BREAK", "Pre-9C English", "10B English", "10B English", "6C S.Studies"],
-        Wednesday: ["Free", "6C English", "6E English", "9D English", "Pre-9C English", "BREAK", "Free", "10B English", "Free", "6C S.Studies"],
-        Thursday: ["Free", "6C English", "6E English", "9D English", "Free", "BREAK", "Pre-9C English", "10B English", "Free", "6C S.Studies"],
-        Friday: ["", "6C English", "6E English", "9D English", "Free", "BREAK", "Pre-9C English", "10B English", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["6C", "English"], P2: ["6E", "English"], P3: ["9D", "English"], P4: "Free", P5: ["Pre-9C", "English"], P6: "Free", P7: "Free", P8: ["6C", "S.Studies"] },
+        Tuesday: { Zero: "Free", P1: ["6C", "English"], P2: ["6E", "English"], P3: ["9D", "English"], P4: "Free", P5: ["Pre-9C", "English"], P6: ["10B", "English"], P7: ["10B", "English"], P8: ["6C", "S.Studies"] },
+        Wednesday: { Zero: "Free", P1: ["6C", "English"], P2: ["6E", "English"], P3: ["9D", "English"], P4: ["Pre-9C", "English"], P5: "Free", P6: ["10B", "English"], P7: "Free", P8: ["6C", "S.Studies"] },
+        Thursday: { Zero: "Free", P1: ["6C", "English"], P2: ["6E", "English"], P3: ["9D", "English"], P4: "Free", P5: ["Pre-9C", "English"], P6: ["10B", "English"], P7: "Free", P8: ["6C", "S.Studies"] },
+        Friday: { Zero: null, P1: ["6C", "English"], P2: ["6E", "English"], P3: ["9D", "English"], P4: "Free", P5: ["Pre-9C", "English"], P6: ["10B", "English"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Asif Ali",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["Free", "Pre-9C Math", "Free", "9C Math", "6F Math", "BREAK", "6F Math", "6C Math", "6A Math", "Free"],
-        Tuesday: ["9C Math", "Pre-9C Math", "Free", "9C Math", "6A Math", "BREAK", "6F Math", "6C Math", "6C Math", "Free"],
-        Wednesday: ["Free", "Pre-9C Math", "Pre-9C Math", "Free", "6A Math", "BREAK", "6F Math", "6C Math", "Free", "Free"],
-        Thursday: ["Free", "Pre-9C Math", "Free", "9C Math", "6A Math", "BREAK", "6F Math", "6C Math", "6A Math", "9C Math"],
-        Friday: ["", "Pre-9C Math", "Free", "9C Math", "6A Math", "BREAK", "6F Math", "6C Math", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["Pre-9C", "Math"], P2: "Free", P3: ["9C", "Math"], P4: ["6F", "Math"], P5: ["6F", "Math"], P6: ["6C", "Math"], P7: ["6A", "Math"], P8: "Free" },
+        Tuesday: { Zero: ["9C", "Math"], P1: ["Pre-9C", "Math"], P2: "Free", P3: ["9C", "Math"], P4: ["6A", "Math"], P5: ["6F", "Math"], P6: ["6C", "Math"], P7: ["6C", "Math"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: ["Pre-9C", "Math"], P2: ["Pre-9C", "Math"], P3: "Free", P4: ["6A", "Math"], P5: ["6F", "Math"], P6: ["6C", "Math"], P7: "Free", P8: "Free" },
+        Thursday: { Zero: "Free", P1: ["Pre-9C", "Math"], P2: "Free", P3: ["9C", "Math"], P4: ["6A", "Math"], P5: ["6F", "Math"], P6: ["6C", "Math"], P7: ["6A", "Math"], P8: ["9C", "Math"] },
+        Friday: { Zero: null, P1: ["Pre-9C", "Math"], P2: "Free", P3: ["9C", "Math"], P4: ["6A", "Math"], P5: ["6F", "Math"], P6: ["6C", "Math"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Asif Majeed",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["Pre-9E Math", "10C Math", "Free", "6E Math", "Free", "BREAK", "7E Math", "Pre-9E Math", "Free", "Free"],
-        Tuesday: ["Free", "10C Math", "Free", "Free", "Pre-9E Math", "BREAK", "7E Math", "6E Math", "10C Math", "7E Computer"],
-        Wednesday: ["Free", "10C Math", "Free", "Free", "Pre-9E Math", "BREAK", "7E Math", "6E Math", "Free", "7E Computer"],
-        Thursday: ["Free", "10C Math", "7E Math", "Free", "Pre-9E Math", "BREAK", "7E Math", "6E Math", "Free", "7E Computer"],
-        Friday: ["", "10C Math", "Free", "6E Math", "Pre-9E Math", "BREAK", "7E Math", "6E Math", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["Pre-9E", "Math"], P1: ["10C", "Math"], P2: "Free", P3: ["6E", "Math"], P4: "Free", P5: ["7E", "Math"], P6: ["Pre-9E", "Math"], P7: "Free", P8: "Free" },
+        Tuesday: { Zero: "Free", P1: ["10C", "Math"], P2: "Free", P3: "Free", P4: ["Pre-9E", "Math"], P5: ["7E", "Math"], P6: ["6E", "Math"], P7: ["10C", "Math"], P8: ["7E", "Computer"] },
+        Wednesday: { Zero: "Free", P1: ["10C", "Math"], P2: "Free", P3: "Free", P4: ["Pre-9E", "Math"], P5: ["7E", "Math"], P6: ["6E", "Math"], P7: "Free", P8: ["7E", "Computer"] },
+        Thursday: { Zero: "Free", P1: ["10C", "Math"], P2: ["7E", "Math"], P3: "Free", P4: ["Pre-9E", "Math"], P5: ["7E", "Math"], P6: ["6E", "Math"], P7: "Free", P8: ["7E", "Computer"] },
+        Friday: { Zero: null, P1: ["10C", "Math"], P2: "Free", P3: ["6E", "Math"], P4: ["Pre-9E", "Math"], P5: ["7E", "Math"], P6: ["6E", "Math"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Farkhanda",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["10A English", "6D English", "6D S.Studies", "Free", "Free", "BREAK", "9C English", "Pre-9B English", "6D S.Studies", "7A English"],
-        Tuesday: ["Free", "6D English", "10A English", "7A English", "Free", "BREAK", "9C English", "Pre-9B English", "Free", "Pre-9B English"],
-        Wednesday: ["Pre-9B English", "6D English", "10A English", "Free", "Free", "BREAK", "9C English", "Free", "6D S.Studies", "7A English"],
-        Thursday: ["Free", "6D English", "10A English", "Free", "Free", "BREAK", "9C English", "Pre-9B English", "Free", "7A English"],
-        Friday: ["", "6D English", "10A English", "7A English", "6D S. Studies", "BREAK", "9C English", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["10A", "English"], P1: ["6D", "English"], P2: ["6D", "S.Studies"], P3: "Free", P4: "Free", P5: ["9C", "English"], P6: ["Pre-9B", "English"], P7: ["6D", "S.Studies"], P8: ["7A", "English"] },
+        Tuesday: { Zero: "Free", P1: ["6D", "English"], P2: ["10A", "English"], P3: ["7A", "English"], P4: "Free", P5: ["9C", "English"], P6: ["Pre-9B", "English"], P7: "Free", P8: ["Pre-9B", "English"] },
+        Wednesday: { Zero: ["Pre-9B", "English"], P1: ["6D", "English"], P2: ["10A", "English"], P3: "Free", P4: "Free", P5: ["9C", "English"], P6: "Free", P7: ["6D", "S.Studies"], P8: ["7A", "English"] },
+        Thursday: { Zero: "Free", P1: ["6D", "English"], P2: ["10A", "English"], P3: "Free", P4: "Free", P5: ["9C", "English"], P6: ["Pre-9B", "English"], P7: "Free", P8: ["7A", "English"] },
+        Friday: { Zero: null, P1: ["6D", "English"], P2: ["10A", "English"], P3: ["7A", "English"], P4: ["6D", "S.Studies"], P5: ["9C", "English"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Fatima",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["9D Physics", "9D Physics", "Pre-9E Physics", "Free", "9A Physics", "BREAK", "Free", "9A Physics", "Pre-9C Physics", "Pre-9E Physics"],
-        Tuesday: ["Pre-9C Physics", "9D Physics", "Pre-9E Physics", "Free", "9A Physics", "BREAK", "10C Physics", "Free", "Pre-9C Physics", "10C Physics"],
-        Wednesday: ["Pre-9E Physics", "9D Physics", "Pre-9E Physics", "Free", "9A Physics", "BREAK", "10C Physics", "Free", "Pre-9C Physics", "Pre-9C Physics"],
-        Thursday: ["Free", "9D Physics", "Free", "Free", "9A Physics", "BREAK", "Free", "Free", "Pre-9C Physics", "10C Physics"],
-        Friday: ["", "9D Physics", "Pre-9E Physics", "Free", "9A Physics", "BREAK", "10C Physics", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["9D", "Physics"], P1: ["9D", "Physics"], P2: ["Pre-9E", "Physics"], P3: "Free", P4: ["9A", "Physics"], P5: "Free", P6: ["9A", "Physics"], P7: ["Pre-9C", "Physics"], P8: ["Pre-9E", "Physics"] },
+        Tuesday: { Zero: ["Pre-9C", "Physics"], P1: ["9D", "Physics"], P2: ["Pre-9E", "Physics"], P3: "Free", P4: ["9A", "Physics"], P5: ["10C", "Physics"], P6: "Free", P7: ["Pre-9C", "Physics"], P8: ["10C", "Physics"] },
+        Wednesday: { Zero: ["Pre-9E", "Physics"], P1: ["9D", "Physics"], P2: ["Pre-9E", "Physics"], P3: "Free", P4: ["9A", "Physics"], P5: ["10C", "Physics"], P6: "Free", P7: ["Pre-9C", "Physics"], P8: ["Pre-9C", "Physics"] },
+        Thursday: { Zero: "Free", P1: ["9D", "Physics"], P2: "Free", P3: "Free", P4: ["9A", "Physics"], P5: "Free", P6: "Free", P7: ["Pre-9C", "Physics"], P8: ["10C", "Physics"] },
+        Friday: { Zero: null, P1: ["9D", "Physics"], P2: ["Pre-9E", "Physics"], P3: "Free", P4: ["9A", "Physics"], P5: ["10C", "Physics"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Fozia",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Free", "6A English", "6F English", "9A English", "10C English", "BREAK", "Pre-9A English", "Free", "Free", "6A S.Studies"],
-        Tuesday: ["Free", "6A English", "6F English", "9A English", "10C English", "BREAK", "Pre-9A English", "Free", "Free", "6A S.Studies"],
-        Wednesday: ["Free", "6A English", "6F English", "9A English", "Free", "BREAK", "Pre-9A English", "Free", "10C English", "6A S. Studies"],
-        Thursday: ["Free", "6A English", "6F English", "9A English", "Free", "BREAK", "Pre-9A English", "Free", "10C English", "6A S.Studies"],
-        Friday: ["", "6A English", "6F English", "9A English", "10C English", "BREAK", "Pre-9A English", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["6A", "English"], P2: ["6F", "English"], P3: ["9A", "English"], P4: ["10C", "English"], P5: ["Pre-9A", "English"], P6: "Free", P7: "Free", P8: ["6A", "S.Studies"] },
+        Tuesday: { Zero: "Free", P1: ["6A", "English"], P2: ["6F", "English"], P3: ["9A", "English"], P4: ["10C", "English"], P5: ["Pre-9A", "English"], P6: "Free", P7: "Free", P8: ["6A", "S.Studies"] },
+        Wednesday: { Zero: "Free", P1: ["6A", "English"], P2: ["6F", "English"], P3: ["9A", "English"], P4: "Free", P5: ["Pre-9A", "English"], P6: "Free", P7: ["10C", "English"], P8: ["6A", "S.Studies"] },
+        Thursday: { Zero: "Free", P1: ["6A", "English"], P2: ["6F", "English"], P3: ["9A", "English"], P4: "Free", P5: ["Pre-9A", "English"], P6: "Free", P7: ["10C", "English"], P8: ["6A", "S.Studies"] },
+        Friday: { Zero: null, P1: ["6A", "English"], P2: ["6F", "English"], P3: ["9A", "English"], P4: ["10C", "English"], P5: ["Pre-9A", "English"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Mr Hafiz Asif",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["Pre-9C TQ", "Free", "Pre-9C TQ", "9B Islamiat", "Free", "BREAK", "Pre-9D Islamiat", "Free", "10C TQ", "9E Islamiat"],
-        Tuesday: ["Free", "Free", "9B TQ", "10C TQ", "Free", "BREAK", "Pre-9D Islamiat", "Free", "9B Islamiat", "9E Islamiat"],
-        Wednesday: ["9E Islamiat", "Free", "9B TQ", "9B Islamiat", "10C TQ", "BREAK", "Pre-9C TQ", "Free", "9B Islamiat", "9E Islamiat"],
-        Thursday: ["Free", "Free", "9B TQ", "Pre-9C TQ", "10C TQ", "BREAK", "Pre-9D Islamiat", "Free", "9B Islamiat", "9E Islamiat"],
-        Friday: ["", "Free", "9B TQ", "Free", "Pre-9D Islamiat", "BREAK", "Pre-9D Islamiat", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["Pre-9C", "TQ"], P1: "Free", P2: ["Pre-9C", "TQ"], P3: ["9B", "Islamiat"], P4: "Free", P5: ["Pre-9D", "Islamiat"], P6: "Free", P7: ["10C", "TQ"], P8: ["9E", "Islamiat"] },
+        Tuesday: { Zero: "Free", P1: "Free", P2: ["9B", "TQ"], P3: ["10C", "TQ"], P4: "Free", P5: ["Pre-9D", "Islamiat"], P6: "Free", P7: ["9B", "Islamiat"], P8: ["9E", "Islamiat"] },
+        Wednesday: { Zero: ["9E", "Islamiat"], P1: "Free", P2: ["9B", "TQ"], P3: ["9B", "Islamiat"], P4: ["10C", "TQ"], P5: ["Pre-9C", "TQ"], P6: "Free", P7: ["9B", "Islamiat"], P8: ["9E", "Islamiat"] },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["9B", "TQ"], P3: ["Pre-9C", "TQ"], P4: ["10C", "TQ"], P5: ["Pre-9D", "Islamiat"], P6: "Free", P7: ["9B", "Islamiat"], P8: ["9E", "Islamiat"] },
+        Friday: { Zero: null, P1: "Free", P2: ["9B", "TQ"], P3: "Free", P4: ["Pre-9D", "Islamiat"], P5: ["Pre-9D", "Islamiat"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Mr Hamza",
       weeklyLoad: 28,
-      schedule: {
-        Monday: ["Pre-9D Physics", "7E Science", "Pre-9D Physics", "Free", "Pre-9B Physics", "BREAK", "Free", "9C Physics", "Free", "10A Physics"],
-        Tuesday: ["10A Physics", "7E Science", "Pre-9D Physics", "Free", "Pre-9B Physics", "BREAK", "Free", "9C Physics", "Free", "10A Physics"],
-        Wednesday: ["7E Science", "Free", "Pre-9D Physics", "Free", "Pre-9B Physics", "BREAK", "Free", "9C Physics", "9C Physics", "Pre-9B Physics"],
-        Thursday: ["7E Science", "Free", "Pre-9D Physics", "Free", "Pre-9B Physics", "BREAK", "Free", "9C Physics", "10A Physics", "10A Physics"],
-        Friday: ["7E Science", "Pre-9D Physics", "Free", "Pre-9B Physics", "BREAK", "Free", "9C Physics", "", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["Pre-9D", "Physics"], P1: ["7E", "Science"], P2: ["Pre-9D", "Physics"], P3: "Free", P4: ["Pre-9B", "Physics"], P5: "Free", P6: ["9C", "Physics"], P7: "Free", P8: ["10A", "Physics"] },
+        Tuesday: { Zero: ["10A", "Physics"], P1: ["7E", "Science"], P2: ["Pre-9D", "Physics"], P3: "Free", P4: ["Pre-9B", "Physics"], P5: "Free", P6: ["9C", "Physics"], P7: "Free", P8: ["10A", "Physics"] },
+        Wednesday: { Zero: "Free", P1: ["7E", "Science"], P2: ["Pre-9D", "Physics"], P3: "Free", P4: ["Pre-9B", "Physics"], P5: "Free", P6: ["9C", "Physics"], P7: ["9C", "Physics"], P8: ["Pre-9B", "Physics"] },
+        Thursday: { Zero: "Free", P1: ["7E", "Science"], P2: ["Pre-9D", "Physics"], P3: "Free", P4: ["Pre-9B", "Physics"], P5: "Free", P6: ["9C", "Physics"], P7: ["10A", "Physics"], P8: ["10A", "Physics"] },
+        Friday: { Zero: null, P1: ["7E", "Science"], P2: ["Pre-9D", "Physics"], P3: "Free", P4: ["Pre-9B", "Physics"], P5: "Free", P6: ["9C", "Physics"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Imtiaz",
       weeklyLoad: 31,
-      schedule: {
-        Monday: ["9B Chemistry", "Free", "7D Science", "10A Chemistry", "7C Science", "BREAK", "10A Chemistry", "Pre-9A Chemistry", "6B Science", "Free"],
-        Tuesday: ["9B Chemistry", "Free", "7D Science", "9B Chemistry", "7C Science", "BREAK", "10A Chemistry", "Pre-9A Chemistry", "6B Science", "Free"],
-        Wednesday: ["9B Chemistry", "Free", "7D Science", "Free", "7C Science", "BREAK", "10A Chemistry", "Pre-9A Chemistry", "6B Science", "Free"],
-        Thursday: ["9B Chemistry", "Free", "7D Science", "Free", "7C Science", "BREAK", "10A Chemistry", "Pre-9A Chemistry", "6B Science", "6B Science"],
-        Friday: ["", "Free", "7D Science", "Free", "7C Science", "BREAK", "10A Chemistry", "Pre-9A Chemistry", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["9B", "Chemistry"], P1: "Free", P2: ["7D", "Science"], P3: ["10A", "Chemistry"], P4: ["7C", "Science"], P5: ["10A", "Chemistry"], P6: ["Pre-9A", "Chemistry"], P7: ["6B", "Science"], P8: "Free" },
+        Tuesday: { Zero: ["9B", "Chemistry"], P1: "Free", P2: ["7D", "Science"], P3: ["9B", "Chemistry"], P4: ["7C", "Science"], P5: ["10A", "Chemistry"], P6: ["Pre-9A", "Chemistry"], P7: ["6B", "Science"], P8: "Free" },
+        Wednesday: { Zero: ["9B", "Chemistry"], P1: "Free", P2: ["7D", "Science"], P3: "Free", P4: ["7C", "Science"], P5: ["10A", "Chemistry"], P6: ["Pre-9A", "Chemistry"], P7: ["6B", "Science"], P8: "Free" },
+        Thursday: { Zero: ["9B", "Chemistry"], P1: "Free", P2: ["7D", "Science"], P3: "Free", P4: ["7C", "Science"], P5: ["10A", "Chemistry"], P6: ["Pre-9A", "Chemistry"], P7: ["6B", "Science"], P8: ["6B", "Science"] },
+        Friday: { Zero: null, P1: "Free", P2: ["7D", "Science"], P3: "Free", P4: ["7C", "Science"], P5: ["10A", "Chemistry"], P6: ["Pre-9A", "Chemistry"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Ismat",
       weeklyLoad: 24,
-      schedule: {
-        Monday: ["Free", "9B Math", "9B Math", "Pre-9B Math", "Free", "BREAK", "7B Math", "Free", "10D Math", "Pre-9B Math"],
-        Tuesday: ["10D Math", "9B Math", "7B Math", "Pre-9B Math", "Free", "BREAK", "7B Math", "Free", "10D Math", "Free"],
-        Wednesday: ["Free", "9B Math", "Free", "Pre-9B Math", "Free", "BREAK", "7B Math", "Free", "10D Math", "Free"],
-        Thursday: ["10D Math", "9B Math", "Free", "Pre-9B Math", "Free", "BREAK", "7B Math", "Free", "10D Math", "Free"],
-        Friday: ["", "9B Math", "Free", "Pre-9B Math", "Free", "BREAK", "Free", "7B Math", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["9B", "Math"], P2: ["9B", "Math"], P3: ["Pre-9B", "Math"], P4: "Free", P5: ["7B", "Math"], P6: "Free", P7: ["10D", "Math"], P8: ["Pre-9B", "Math"] },
+        Tuesday: { Zero: ["10D", "Math"], P1: ["9B", "Math"], P2: ["7B", "Math"], P3: ["Pre-9B", "Math"], P4: "Free", P5: ["7B", "Math"], P6: "Free", P7: ["10D", "Math"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: ["9B", "Math"], P2: "Free", P3: ["Pre-9B", "Math"], P4: "Free", P5: ["7B", "Math"], P6: "Free", P7: ["10D", "Math"], P8: "Free" },
+        Thursday: { Zero: ["10D", "Math"], P1: ["9B", "Math"], P2: "Free", P3: ["Pre-9B", "Math"], P4: "Free", P5: ["7B", "Math"], P6: "Free", P7: ["10D", "Math"], P8: "Free" },
+        Friday: { Zero: null, P1: ["9B", "Math"], P2: "Free", P3: ["Pre-9B", "Math"], P4: "Free", P5: "Free", P6: ["7B", "Math"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Kaleem",
       weeklyLoad: 18,
-      schedule: {
-        Monday: ["Free", "Free", "Free", "Free", "Pre-9E Sports", "BREAK", "Free", "9B Sports", "9E Sports", "Free"],
-        Tuesday: ["Free", "Free", "7E S.D", "7C S.D", "Pre-9C Sports", "BREAK", "Pre-9B Sports", "7B S.D", "9C Sports", "Free"],
-        Wednesday: ["Free", "Free", "Free", "Free", "Free", "BREAK", "Pre-9D Sports", "9A Sports", "Free", "Free"],
-        Thursday: ["Free", "Free", "9D Sports", "Free", "Pre-9A Sports", "BREAK", "Free", "7D S.D", "6F Sports", "Free"],
-        Friday: ["", "Free", "6D Sports", "Free", "6E Sports", "BREAK", "Free", "7A S.D", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: "Free", P3: "Free", P4: ["Pre-9E", "Sports"], P5: "Free", P6: ["9B", "Sports"], P7: ["9E", "Sports"], P8: "Free" },
+        Tuesday: { Zero: "Free", P1: "Free", P2: ["7E", "S.D"], P3: ["7C", "S.D"], P4: ["Pre-9C", "Sports"], P5: ["Pre-9B", "Sports"], P6: ["7B", "S.D"], P7: ["9C", "Sports"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: "Free", P2: "Free", P3: "Free", P4: "Free", P5: ["Pre-9D", "Sports"], P6: ["9A", "Sports"], P7: "Free", P8: "Free" },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["9D", "Sports"], P3: "Free", P4: ["Pre-9A", "Sports"], P5: "Free", P6: ["7D", "S.D"], P7: ["6F", "Sports"], P8: "Free" },
+        Friday: { Zero: null, P1: "Free", P2: ["6D", "Sports"], P3: "Free", P4: ["6E", "Sports"], P5: "Free", P6: ["7A", "S.D"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Kamran",
       weeklyLoad: 26,
-      schedule: {
-        Monday: ["Free", "Free", "Free", "7D S.Studies", "10D P.Studies", "BREAK", "Free", "7E S.Studies", "7C S.Studies", "10B P.Studies"],
-        Tuesday: ["10B P.Studies", "Free", "Free", "7D S.Studies", "10D P.Studies", "BREAK", "Free", "Free", "7C S.Studies", "10B P.Studies"],
-        Wednesday: ["Free", "Free", "7B S.Studies", "Free", "10D P.Studies", "BREAK", "Free", "7E S.Studies", "7C S.Studies", "10B P.Studies"],
-        Thursday: ["Free", "Free", "7B S.Studies", "7D S.Studies", "10D P.Studies", "BREAK", "Free", "7E S.Studies", "7C S.Studies", "10B P.Studies"],
-        Friday: ["", "Free", "7B S.Studies", "7D S.Studies", "10D P.Studies", "BREAK", "7B S.Studies", "7E S.Studies", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["7D", "S.Studies"], P4: ["10D", "P.Studies"], P5: "Free", P6: ["7E", "S.Studies"], P7: ["7C", "S.Studies"], P8: ["10B", "P.Studies"] },
+        Tuesday: { Zero: ["10B", "P.Studies"], P1: "Free", P2: "Free", P3: ["7D", "S.Studies"], P4: ["10D", "P.Studies"], P5: "Free", P6: "Free", P7: ["7C", "S.Studies"], P8: ["10B", "P.Studies"] },
+        Wednesday: { Zero: "Free", P1: "Free", P2: ["7B", "S.Studies"], P3: "Free", P4: ["10D", "P.Studies"], P5: "Free", P6: ["7E", "S.Studies"], P7: ["7C", "S.Studies"], P8: ["10B", "P.Studies"] },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["7B", "S.Studies"], P3: ["7D", "S.Studies"], P4: ["10D", "P.Studies"], P5: "Free", P6: ["7E", "S.Studies"], P7: ["7C", "S.Studies"], P8: ["10B", "P.Studies"] },
+        Friday: { Zero: null, P1: "Free", P2: ["7B", "S.Studies"], P3: ["7D", "S.Studies"], P4: ["10D", "P.Studies"], P5: ["7B", "S.Studies"], P6: ["7E", "S.Studies"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Khurram",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["Free", "7A Math", "7A Math", "6D Math", "Free", "BREAK", "Free", "Pre-9D Math", "Free", "9D Math"],
-        Tuesday: ["Pre-9D Math", "7A Math", "6D Math", "6D Math", "Free", "BREAK", "Free", "Pre-9D Math", "7A Computer", "9D Math"],
-        Wednesday: ["9D Math", "7A Math", "Free", "6D Math", "Free", "BREAK", "Free", "Pre-9D Math", "7A Computer", "9D Math"],
-        Thursday: ["9D Math", "7A Math", "Free", "6D Math", "Free", "BREAK", "Free", "Pre-9D Math", "7A Computer", "9D Math"],
-        Friday: ["", "7A Math", "Free", "6D Math", "Free", "BREAK", "Free", "Pre-9D Math", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["7A", "Math"], P2: ["7A", "Math"], P3: ["6D", "Math"], P4: "Free", P5: "Free", P6: ["Pre-9D", "Math"], P7: "Free", P8: ["9D", "Math"] },
+        Tuesday: { Zero: ["Pre-9D", "Math"], P1: ["7A", "Math"], P2: ["6D", "Math"], P3: ["6D", "Math"], P4: "Free", P5: "Free", P6: ["Pre-9D", "Math"], P7: ["7A", "Computer"], P8: ["9D", "Math"] },
+        Wednesday: { Zero: ["9D", "Math"], P1: ["7A", "Math"], P2: "Free", P3: ["6D", "Math"], P4: "Free", P5: "Free", P6: ["Pre-9D", "Math"], P7: ["7A", "Computer"], P8: ["9D", "Math"] },
+        Thursday: { Zero: ["9D", "Math"], P1: ["7A", "Math"], P2: "Free", P3: ["6D", "Math"], P4: "Free", P5: "Free", P6: ["Pre-9D", "Math"], P7: ["7A", "Computer"], P8: ["9D", "Math"] },
+        Friday: { Zero: null, P1: ["7A", "Math"], P2: "Free", P3: ["6D", "Math"], P4: "Free", P5: "Free", P6: ["Pre-9D", "Math"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Maida",
       weeklyLoad: 26,
-      schedule: {
-        Monday: ["Free", "10A P.Studies", "Free", "7A S.Studies", "Free", "BREAK", "Free", "Free", "6E S.Studies", "10C P.Studies"],
-        Tuesday: ["Free", "10A P.Studies", "10C P.Studies", "Free", "6F S.Studies", "BREAK", "Free", "6B S.Studies", "6E S.Studies", "7A S.Studies"],
-        Wednesday: ["Free", "10A P.Studies", "Free", "7A S.Studies", "6F S.Studies", "BREAK", "Free", "6B S.Studies", "6E S.Studies", "10C P.Studies"],
-        Thursday: ["Free", "10A P.Studies", "10C P.Studies", "7A S.Studies", "6F S.Studies", "BREAK", "Free", "6B S.Studies", "6E S.Studies", "Free"],
-        Friday: ["", "10A P.Studies", "10C P.Studies", "Free", "6F S.Studies", "BREAK", "Free", "6B S.Studies", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["10A", "P.Studies"], P2: "Free", P3: ["7A", "S.Studies"], P4: "Free", P5: "Free", P6: "Free", P7: ["6E", "S.Studies"], P8: ["10C", "P.Studies"] },
+        Tuesday: { Zero: "Free", P1: ["10A", "P.Studies"], P2: ["10C", "P.Studies"], P3: "Free", P4: ["6F", "S.Studies"], P5: "Free", P6: ["6B", "S.Studies"], P7: ["6E", "S.Studies"], P8: ["7A", "S.Studies"] },
+        Wednesday: { Zero: "Free", P1: ["10A", "P.Studies"], P2: "Free", P3: ["7A", "S.Studies"], P4: ["6F", "S.Studies"], P5: "Free", P6: ["6B", "S.Studies"], P7: ["6E", "S.Studies"], P8: ["10C", "P.Studies"] },
+        Thursday: { Zero: "Free", P1: ["10A", "P.Studies"], P2: ["10C", "P.Studies"], P3: ["7A", "S.Studies"], P4: ["6F", "S.Studies"], P5: "Free", P6: ["6B", "S.Studies"], P7: ["6E", "S.Studies"], P8: "Free" },
+        Friday: { Zero: null, P1: ["10A", "P.Studies"], P2: ["10C", "P.Studies"], P3: "Free", P4: ["6F", "S.Studies"], P5: "Free", P6: ["6B", "S.Studies"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Maria",
       weeklyLoad: 31,
-      schedule: {
-        Monday: ["10B Chemistry", "9C Chemistry", "6A Science", "10B Chemistry", "7B Science", "BREAK", "6C Science", "Free", "Free", "6D Science"],
-        Tuesday: ["Free", "9C Chemistry", "6A Science", "10B Chemistry", "7B Science", "BREAK", "6C Science", "6D Science", "Free", "6D Science"],
-        Wednesday: ["Free", "9C Chemistry", "6A Science", "10B Chemistry", "7B Science", "BREAK", "6C Science", "Free", "Free", "6D Science"],
-        Thursday: ["Free", "9C Chemistry", "6A Science", "10B Chemistry", "7B Science", "BREAK", "6C Science", "Free", "Free", "6D Science"],
-        Friday: ["", "9C Chemistry", "6A Science", "10B Chemistry", "7B Science", "BREAK", "6C Science", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["10B", "Chemistry"], P1: ["9C", "Chemistry"], P2: ["6A", "Science"], P3: ["10B", "Chemistry"], P4: ["7B", "Science"], P5: ["6C", "Science"], P6: "Free", P7: "Free", P8: ["6D", "Science"] },
+        Tuesday: { Zero: "Free", P1: ["9C", "Chemistry"], P2: ["6A", "Science"], P3: ["10B", "Chemistry"], P4: ["7B", "Science"], P5: ["6C", "Science"], P6: ["6D", "Science"], P7: "Free", P8: ["6D", "Science"] },
+        Wednesday: { Zero: "Free", P1: ["9C", "Chemistry"], P2: ["6A", "Science"], P3: ["10B", "Chemistry"], P4: ["7B", "Science"], P5: ["6C", "Science"], P6: "Free", P7: "Free", P8: ["6D", "Science"] },
+        Thursday: { Zero: "Free", P1: ["9C", "Chemistry"], P2: ["6A", "Science"], P3: ["10B", "Chemistry"], P4: ["7B", "Science"], P5: ["6C", "Science"], P6: "Free", P7: "Free", P8: ["6D", "Science"] },
+        Friday: { Zero: null, P1: ["9C", "Chemistry"], P2: ["6A", "Science"], P3: ["10B", "Chemistry"], P4: ["7B", "Science"], P5: ["6C", "Science"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "New English Teacher",
       weeklyLoad: 28,
-      schedule: {
-        Monday: ["Free", "Free", "6B English", "7E English", "6E TQ", "BREAK", "Free", "6F TQ", "Pre-9D English", "9B English"],
-        Tuesday: ["Free", "Free", "6B English", "7E English", "6E TQ", "BREAK", "Free", "6F TQ", "Pre-9D English", "9B English"],
-        Wednesday: ["Pre-9D English", "Free", "6B English", "7E English", "6E TQ", "BREAK", "Free", "6F TQ", "Pre-9D English", "9B English"],
-        Thursday: ["Free", "Free", "6B English", "7E English", "6E TQ", "BREAK", "Free", "6F TQ", "Pre-9D English", "9B English"],
-        Friday: ["", "Free", "6B English", "7E English", "Free", "BREAK", "Free", "9B English", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: ["6B", "English"], P3: ["7E", "English"], P4: ["6E", "TQ"], P5: "Free", P6: ["6F", "TQ"], P7: ["Pre-9D", "English"], P8: ["9B", "English"] },
+        Tuesday: { Zero: "Free", P1: "Free", P2: ["6B", "English"], P3: ["7E", "English"], P4: ["6E", "TQ"], P5: "Free", P6: ["6F", "TQ"], P7: ["Pre-9D", "English"], P8: ["9B", "English"] },
+        Wednesday: { Zero: ["Pre-9D", "English"], P1: "Free", P2: ["6B", "English"], P3: ["7E", "English"], P4: ["6E", "TQ"], P5: "Free", P6: ["6F", "TQ"], P7: ["Pre-9D", "English"], P8: ["9B", "English"] },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["6B", "English"], P3: ["7E", "English"], P4: ["6E", "TQ"], P5: "Free", P6: ["6F", "TQ"], P7: ["Pre-9D", "English"], P8: ["9B", "English"] },
+        Friday: { Zero: null, P1: "Free", P2: ["6B", "English"], P3: ["7E", "English"], P4: "Free", P5: "Free", P6: ["9B", "English"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Nudrat",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["10C Chemistry", "6F Science", "10C Chemistry", "Pre-9D Chemistry", "9E Chemistry", "BREAK", "Free", "9D Chemistry", "Free", "7D Computer"],
-        Tuesday: ["10C Chemistry", "6F Science", "Free", "Pre-9D Chemistry", "9E Chemistry", "BREAK", "Free", "9D Chemistry", "Free", "Free"],
-        Wednesday: ["10C Chemistry", "6F Science", "10C Chemistry", "Pre-9D Chemistry", "9E Chemistry", "BREAK", "Free", "9D Chemistry", "Free", "7D Computer"],
-        Thursday: ["10C Chemistry", "6F Science", "Free", "Pre-9D Chemistry", "9E Chemistry", "BREAK", "Free", "9D Chemistry", "Free", "7D Computer"],
-        Friday: ["", "6F Science", "Free", "Pre-9D Chemistry", "9E Chemistry", "BREAK", "Free", "9D Chemistry", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["10C", "Chemistry"], P1: ["6F", "Science"], P2: ["10C", "Chemistry"], P3: ["Pre-9D", "Chemistry"], P4: ["9E", "Chemistry"], P5: "Free", P6: ["9D", "Chemistry"], P7: "Free", P8: ["7D", "Computer"] },
+        Tuesday: { Zero: ["10C", "Chemistry"], P1: ["6F", "Science"], P2: "Free", P3: ["Pre-9D", "Chemistry"], P4: ["9E", "Chemistry"], P5: "Free", P6: ["9D", "Chemistry"], P7: "Free", P8: "Free" },
+        Wednesday: { Zero: ["10C", "Chemistry"], P1: ["6F", "Science"], P2: ["10C", "Chemistry"], P3: ["Pre-9D", "Chemistry"], P4: ["9E", "Chemistry"], P5: "Free", P6: ["9D", "Chemistry"], P7: "Free", P8: ["7D", "Computer"] },
+        Thursday: { Zero: ["10C", "Chemistry"], P1: ["6F", "Science"], P2: "Free", P3: ["Pre-9D", "Chemistry"], P4: ["9E", "Chemistry"], P5: "Free", P6: ["9D", "Chemistry"], P7: "Free", P8: ["7D", "Computer"] },
+        Friday: { Zero: null, P1: ["6F", "Science"], P2: "Free", P3: ["Pre-9D", "Chemistry"], P4: ["9E", "Chemistry"], P5: "Free", P6: ["9D", "Chemistry"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Qari Tahir",
       weeklyLoad: 27,
-      schedule: {
-        Monday: ["9C TQ", "Free", "10A TQ", "Free", "Pre-9C Islamiat", "BREAK", "Pre-9B Islamiat", "Free", "9C TQ", "9C Islamiat"],
-        Tuesday: ["Pre-9B Islamiat", "Free", "Pre-9C Islamiat", "10A TQ", "Free", "BREAK", "Free", "Free", "Pre-9B TQ", "9C Islamiat"],
-        Wednesday: ["9C Islamiat", "Free", "9C Islamiat", "9C TQ", "Free", "BREAK", "Pre-9B Islamiat", "Pre-9B TQ", "Pre-9B TQ", "Free"],
-        Thursday: ["9C TQ", "Free", "Pre-9C Islamiat", "10A TQ", "Pre-9C Islamiat", "BREAK", "Pre-9B Islamiat", "Free", "9C Islamiat", "Free"],
-        Friday: ["", "Free", "Pre-9C Islamiat", "10A TQ", "Free", "BREAK", "Pre-9B Islamiat", "Pre-9B TQ", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["9C", "TQ"], P1: "Free", P2: ["10A", "TQ"], P3: "Free", P4: ["Pre-9C", "Islamiat"], P5: ["Pre-9B", "Islamiat"], P6: "Free", P7: ["9C", "TQ"], P8: ["9C", "Islamiat"] },
+        Tuesday: { Zero: ["Pre-9B", "Islamiat"], P1: "Free", P2: ["Pre-9C", "Islamiat"], P3: ["10A", "TQ"], P4: "Free", P5: "Free", P6: "Free", P7: ["Pre-9B", "TQ"], P8: ["9C", "Islamiat"] },
+        Wednesday: { Zero: ["9C", "Islamiat"], P1: "Free", P2: ["9C", "Islamiat"], P3: ["9C", "TQ"], P4: "Free", P5: ["Pre-9B", "Islamiat"], P6: ["Pre-9B", "TQ"], P7: ["Pre-9B", "TQ"], P8: "Free" },
+        Thursday: { Zero: ["9C", "TQ"], P1: "Free", P2: ["Pre-9C", "Islamiat"], P3: ["10A", "TQ"], P4: ["Pre-9C", "Islamiat"], P5: ["Pre-9B", "Islamiat"], P6: "Free", P7: ["9C", "Islamiat"], P8: "Free" },
+        Friday: { Zero: null, P1: "Free", P2: ["Pre-9C", "Islamiat"], P3: ["10A", "TQ"], P4: "Free", P5: ["Pre-9B", "Islamiat"], P6: ["Pre-9B", "TQ"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Rehana",
       weeklyLoad: 26,
-      schedule: {
-        Monday: ["Free", "6E Urdu", "10B Urdu", "Free", "7E Urdu", "BREAK", "9E Urdu", "Free", "7E Urdu", "7E Islamiat"],
-        Tuesday: ["Free", "6E Urdu", "10B Urdu", "6E Islamiat", "Free", "BREAK", "9E Urdu", "7E Islamiat", "7E Urdu", "Free"],
-        Wednesday: ["Free", "6E Urdu", "10B Urdu", "6E Islamiat", "Free", "BREAK", "9E Urdu", "Free", "7E Urdu", "Free"],
-        Thursday: ["10B Urdu", "6E Urdu", "10B Urdu", "6E Islamiat", "Free", "BREAK", "9E Urdu", "Free", "7E Urdu", "Free"],
-        Friday: ["", "6E Urdu", "7E Islamiat", "Free", "Free", "BREAK", "9E Urdu", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["6E", "Urdu"], P2: ["10B", "Urdu"], P3: "Free", P4: ["7E", "Urdu"], P5: ["9E", "Urdu"], P6: "Free", P7: ["7E", "Urdu"], P8: ["7E", "Islamiat"] },
+        Tuesday: { Zero: "Free", P1: ["6E", "Urdu"], P2: ["10B", "Urdu"], P3: ["6E", "Islamiat"], P4: "Free", P5: ["9E", "Urdu"], P6: ["7E", "Islamiat"], P7: ["7E", "Urdu"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: ["6E", "Urdu"], P2: ["10B", "Urdu"], P3: ["6E", "Islamiat"], P4: "Free", P5: ["9E", "Urdu"], P6: "Free", P7: ["7E", "Urdu"], P8: "Free" },
+        Thursday: { Zero: ["10B", "Urdu"], P1: ["6E", "Urdu"], P2: ["10B", "Urdu"], P3: ["6E", "Islamiat"], P4: "Free", P5: ["9E", "Urdu"], P6: "Free", P7: ["7E", "Urdu"], P8: "Free" },
+        Friday: { Zero: null, P1: ["6E", "Urdu"], P2: ["7E", "Islamiat"], P3: "Free", P4: "Free", P5: ["9E", "Urdu"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Rizwana Kousar",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Free", "10D Urdu", "7E TQ", "Pre-9E Urdu", "Free", "BREAK", "6D Urdu", "Free", "9A Urdu", "Pre-9A Urdu"],
-        Tuesday: ["Free", "10D Urdu", "Free", "Pre-9E Urdu", "Free", "BREAK", "6D Urdu", "Free", "9A Urdu", "Pre-9A Urdu"],
-        Wednesday: ["Pre-9A Urdu", "10D Urdu", "Free", "Pre-9E Urdu", "7E TQ", "BREAK", "6D Urdu", "Free", "9A Urdu", "Pre-9A Urdu"],
-        Thursday: ["9A Urdu", "10D Urdu", "Free", "Pre-9E Urdu", "7E TQ", "BREAK", "6D Urdu", "Free", "9A Urdu", "Pre-9A Urdu"],
-        Friday: ["", "10D Urdu", "Free", "Pre-9E Urdu", "7E TQ", "BREAK", "6D Urdu", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["10D", "Urdu"], P2: ["7E", "TQ"], P3: ["Pre-9E", "Urdu"], P4: "Free", P5: ["6D", "Urdu"], P6: "Free", P7: ["9A", "Urdu"], P8: ["Pre-9A", "Urdu"] },
+        Tuesday: { Zero: "Free", P1: ["10D", "Urdu"], P2: "Free", P3: ["Pre-9E", "Urdu"], P4: "Free", P5: ["6D", "Urdu"], P6: "Free", P7: ["9A", "Urdu"], P8: ["Pre-9A", "Urdu"] },
+        Wednesday: { Zero: ["Pre-9A", "Urdu"], P1: ["10D", "Urdu"], P2: "Free", P3: ["Pre-9E", "Urdu"], P4: ["7E", "TQ"], P5: ["6D", "Urdu"], P6: "Free", P7: ["9A", "Urdu"], P8: ["Pre-9A", "Urdu"] },
+        Thursday: { Zero: ["9A", "Urdu"], P1: ["10D", "Urdu"], P2: "Free", P3: ["Pre-9E", "Urdu"], P4: ["7E", "TQ"], P5: ["6D", "Urdu"], P6: "Free", P7: ["9A", "Urdu"], P8: ["Pre-9A", "Urdu"] },
+        Friday: { Zero: null, P1: ["10D", "Urdu"], P2: "Free", P3: ["Pre-9E", "Urdu"], P4: ["7E", "TQ"], P5: ["6D", "Urdu"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Rizwana Shaheen",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Pre-9B Urdu", "7C Urdu", "Free", "Free", "6A Islamiat", "BREAK", "6A Urdu", "7C Islamiat", "Pre-9B Urdu", "6B Islamiat"],
-        Tuesday: ["Free", "7C Urdu", "Free", "Free", "Free", "BREAK", "6A Urdu", "9B Urdu", "6A Islamiat", "6B Islamiat"],
-        Wednesday: ["Free", "7C Urdu", "Free", "7C Islamiat", "Free", "BREAK", "6A Urdu", "9B Urdu", "6A Islamiat", "6B Islamiat"],
-        Thursday: ["Pre-9B Urdu", "7C Urdu", "Free", "9B Urdu", "Free", "BREAK", "6A Urdu", "9B Urdu", "Pre-9B Urdu", "Pre-9B Urdu"],
-        Friday: ["", "7C Urdu", "Free", "9B Urdu", "Free", "BREAK", "6A Urdu", "7C Islamiat", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["Pre-9B", "Urdu"], P1: ["7C", "Urdu"], P2: "Free", P3: "Free", P4: ["6A", "Islamiat"], P5: ["6A", "Urdu"], P6: ["7C", "Islamiat"], P7: ["Pre-9B", "Urdu"], P8: ["6B", "Islamiat"] },
+        Tuesday: { Zero: "Free", P1: ["7C", "Urdu"], P2: "Free", P3: "Free", P4: "Free", P5: ["6A", "Urdu"], P6: ["9B", "Urdu"], P7: ["6A", "Islamiat"], P8: ["6B", "Islamiat"] },
+        Wednesday: { Zero: "Free", P1: ["7C", "Urdu"], P2: "Free", P3: ["7C", "Islamiat"], P4: "Free", P5: ["6A", "Urdu"], P6: ["9B", "Urdu"], P7: ["6A", "Islamiat"], P8: ["6B", "Islamiat"] },
+        Thursday: { Zero: ["Pre-9B", "Urdu"], P1: ["7C", "Urdu"], P2: "Free", P3: ["9B", "Urdu"], P4: "Free", P5: ["6A", "Urdu"], P6: ["9B", "Urdu"], P7: ["Pre-9B", "Urdu"], P8: ["Pre-9B", "Urdu"] },
+        Friday: { Zero: null, P1: ["7C", "Urdu"], P2: "Free", P3: ["9B", "Urdu"], P4: "Free", P5: ["6A", "Urdu"], P6: ["7C", "Islamiat"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Sabiha",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["Free", "Pre-9E English", "10D English", "7B English", "Free", "BREAK", "7C English", "9E English", "7D English", "Free"],
-        Tuesday: ["Free", "Pre-9E English", "10D English", "7B English", "Free", "BREAK", "7C English", "9E English", "7D English", "Free"],
-        Wednesday: ["Free", "Pre-9E English", "10D English", "7B English", "Free", "BREAK", "7C English", "9E English", "7D English", "Free"],
-        Thursday: ["Free", "Pre-9E English", "Free", "7B English", "Free", "BREAK", "7C English", "9E English", "7D English", "10D English"],
-        Friday: ["", "Pre-9E English", "10D English", "7B English", "7D English", "BREAK", "7C English", "9E English", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["Pre-9E", "English"], P2: ["10D", "English"], P3: ["7B", "English"], P4: "Free", P5: ["7C", "English"], P6: ["9E", "English"], P7: ["7D", "English"], P8: "Free" },
+        Tuesday: { Zero: "Free", P1: ["Pre-9E", "English"], P2: ["10D", "English"], P3: ["7B", "English"], P4: "Free", P5: ["7C", "English"], P6: ["9E", "English"], P7: ["7D", "English"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: ["Pre-9E", "English"], P2: ["10D", "English"], P3: ["7B", "English"], P4: "Free", P5: ["7C", "English"], P6: ["9E", "English"], P7: ["7D", "English"], P8: "Free" },
+        Thursday: { Zero: "Free", P1: ["Pre-9E", "English"], P2: "Free", P3: ["7B", "English"], P4: "Free", P5: ["7C", "English"], P6: ["9E", "English"], P7: ["7D", "English"], P8: ["10D", "English"] },
+        Friday: { Zero: null, P1: ["Pre-9E", "English"], P2: ["10D", "English"], P3: ["7B", "English"], P4: ["7D", "English"], P5: ["7C", "English"], P6: ["9E", "English"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Sajeela",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["Free", "Pre-9D Urdu", "9C Urdu", "10C Urdu", "6D Islamiat", "BREAK", "10C Urdu", "6D TQ", "6C Islamiat", "Pre-9C Urdu"],
-        Tuesday: ["Free", "Pre-9D Urdu", "9C Urdu", "Free", "6D Islamiat", "BREAK", "Free", "Free", "6D TQ", "Pre-9C Urdu"],
-        Wednesday: ["Pre-9C Urdu", "Pre-9D Urdu", "Free", "10C Urdu", "Free", "BREAK", "Free", "Free", "6C Islamiat", "9C Urdu"],
-        Thursday: ["Free", "Pre-9D Urdu", "9C Urdu", "10C Urdu", "6D Islamiat", "BREAK", "Free", "6D TQ", "6C Islamiat", "Pre-9C Urdu"],
-        Friday: ["", "Pre-9D Urdu", "9C Urdu", "10C Urdu", "Pre-9C Urdu", "BREAK", "Free", "6D TQ", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["Pre-9D", "Urdu"], P2: ["9C", "Urdu"], P3: ["10C", "Urdu"], P4: ["6D", "Islamiat"], P5: ["10C", "Urdu"], P6: ["6D", "TQ"], P7: ["6C", "Islamiat"], P8: ["Pre-9C", "Urdu"] },
+        Tuesday: { Zero: "Free", P1: ["Pre-9D", "Urdu"], P2: ["9C", "Urdu"], P3: "Free", P4: ["6D", "Islamiat"], P5: "Free", P6: "Free", P7: ["6D", "TQ"], P8: ["Pre-9C", "Urdu"] },
+        Wednesday: { Zero: ["Pre-9C", "Urdu"], P1: ["Pre-9D", "Urdu"], P2: "Free", P3: ["10C", "Urdu"], P4: "Free", P5: "Free", P6: "Free", P7: ["6C", "Islamiat"], P8: ["9C", "Urdu"] },
+        Thursday: { Zero: "Free", P1: ["Pre-9D", "Urdu"], P2: ["9C", "Urdu"], P3: ["10C", "Urdu"], P4: ["6D", "Islamiat"], P5: "Free", P6: ["6D", "TQ"], P7: ["6C", "Islamiat"], P8: ["Pre-9C", "Urdu"] },
+        Friday: { Zero: null, P1: ["Pre-9D", "Urdu"], P2: ["9C", "Urdu"], P3: ["10C", "Urdu"], P4: ["Pre-9C", "Urdu"], P5: "Free", P6: ["6D", "TQ"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Samiya",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["9E TQ", "Free", "9D Islamiat", "Free", "Pre-9A TQ", "BREAK", "9D TQ", "10B TQ", "10B TQ", "Free"],
-        Tuesday: ["9D Islamiat", "Free", "9D Islamiat", "Free", "Pre-9A TQ", "BREAK", "9D TQ", "Pre-9E Islamiat", "9E TQ", "Pre-9E TQ"],
-        Wednesday: ["10B TQ", "Free", "9D Islamiat", "Free", "Pre-9A TQ", "BREAK", "9D TQ", "Pre-9E Islamiat", "9E TQ", "Pre-9E TQ"],
-        Thursday: ["Pre-9E Islamiat", "Free", "Pre-9E TQ", "Free", "10B TQ", "BREAK", "9D TQ", "Pre-9E Islamiat", "9E TQ", "Pre-9E TQ"],
-        Friday: ["", "Free", "9D Islamiat", "Free", "Pre-9A TQ", "BREAK", "Free", "Pre-9E Islamiat", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["9E", "TQ"], P1: "Free", P2: ["9D", "Islamiat"], P3: "Free", P4: ["Pre-9A", "TQ"], P5: ["9D", "TQ"], P6: ["10B", "TQ"], P7: ["10B", "TQ"], P8: "Free" },
+        Tuesday: { Zero: ["9D", "Islamiat"], P1: "Free", P2: ["9D", "Islamiat"], P3: "Free", P4: ["Pre-9A", "TQ"], P5: ["9D", "TQ"], P6: ["Pre-9E", "Islamiat"], P7: ["9E", "TQ"], P8: ["Pre-9E", "TQ"] },
+        Wednesday: { Zero: ["10B", "TQ"], P1: "Free", P2: ["9D", "Islamiat"], P3: "Free", P4: ["Pre-9A", "TQ"], P5: ["9D", "TQ"], P6: ["Pre-9E", "Islamiat"], P7: ["9E", "TQ"], P8: ["Pre-9E", "TQ"] },
+        Thursday: { Zero: ["Pre-9E", "Islamiat"], P1: "Free", P2: ["Pre-9E", "TQ"], P3: "Free", P4: ["10B", "TQ"], P5: ["9D", "TQ"], P6: ["Pre-9E", "Islamiat"], P7: ["9E", "TQ"], P8: ["Pre-9E", "TQ"] },
+        Friday: { Zero: null, P1: "Free", P2: ["9D", "Islamiat"], P3: "Free", P4: ["Pre-9A", "TQ"], P5: "Free", P6: ["Pre-9E", "Islamiat"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Shahbaz",
       weeklyLoad: 18,
-      schedule: {
-        Monday: ["Free", "Free", "Free", "Free", "6C Computer", "BREAK", "6B Computer", "Free", "Free", "6E Computer"],
-        Tuesday: ["Free", "Free", "Free", "Free", "6C Computer", "BREAK", "Free", "Free", "Free", "6E Computer"],
-        Wednesday: ["Free", "Free", "6D Computer", "6A Computer", "6B Computer", "BREAK", "Free", "6D Computer", "6F Computer", "6E Computer"],
-        Thursday: ["Free", "Free", "Free", "6A Computer", "6C Computer", "BREAK", "Free", "Free", "6D Computer", "6F Computer"],
-        Friday: ["", "Free", "Free", "6A Computer", "6B Computer", "BREAK", "Free", "6F Computer", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: "Free", P3: "Free", P4: ["6C", "Computer"], P5: ["6B", "Computer"], P6: "Free", P7: "Free", P8: ["6E", "Computer"] },
+        Tuesday: { Zero: "Free", P1: "Free", P2: "Free", P3: "Free", P4: ["6C", "Computer"], P5: "Free", P6: "Free", P7: "Free", P8: ["6E", "Computer"] },
+        Wednesday: { Zero: "Free", P1: "Free", P2: ["6D", "Computer"], P3: ["6A", "Computer"], P4: ["6B", "Computer"], P5: "Free", P6: ["6D", "Computer"], P7: ["6F", "Computer"], P8: ["6E", "Computer"] },
+        Thursday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["6A", "Computer"], P4: ["6C", "Computer"], P5: "Free", P6: "Free", P7: ["6D", "Computer"], P8: ["6F", "Computer"] },
+        Friday: { Zero: null, P1: "Free", P2: "Free", P3: ["6A", "Computer"], P4: ["6B", "Computer"], P5: "Free", P6: ["6F", "Computer"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Shahnaz",
       weeklyLoad: 28,
-      schedule: {
-        Monday: ["Free", "6B Urdu", "7B Urdu", "6C Urdu", "9D Urdu", "BREAK", "Free", "7A TQ", "7B Urdu", "7C TQ"],
-        Tuesday: ["Free", "6B Urdu", "Free", "6C Urdu", "9D Urdu", "BREAK", "Free", "7A TQ", "7B Urdu", "7C TQ"],
-        Wednesday: ["Free", "6B Urdu", "Free", "6C Urdu", "9D Urdu", "BREAK", "Free", "7A TQ", "7B Urdu", "7C TQ"],
-        Thursday: ["Free", "6B Urdu", "Free", "6C Urdu", "9D Urdu", "BREAK", "Free", "7A TQ", "7B Urdu", "7C TQ"],
-        Friday: ["", "6B Urdu", "Free", "6C Urdu", "9D Urdu", "BREAK", "Free", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["6B", "Urdu"], P2: ["7B", "Urdu"], P3: ["6C", "Urdu"], P4: ["9D", "Urdu"], P5: "Free", P6: ["7A", "TQ"], P7: ["7B", "Urdu"], P8: ["7C", "TQ"] },
+        Tuesday: { Zero: "Free", P1: ["6B", "Urdu"], P2: "Free", P3: ["6C", "Urdu"], P4: ["9D", "Urdu"], P5: "Free", P6: ["7A", "TQ"], P7: ["7B", "Urdu"], P8: ["7C", "TQ"] },
+        Wednesday: { Zero: "Free", P1: ["6B", "Urdu"], P2: "Free", P3: ["6C", "Urdu"], P4: ["9D", "Urdu"], P5: "Free", P6: ["7A", "TQ"], P7: ["7B", "Urdu"], P8: ["7C", "TQ"] },
+        Thursday: { Zero: "Free", P1: ["6B", "Urdu"], P2: "Free", P3: ["6C", "Urdu"], P4: ["9D", "Urdu"], P5: "Free", P6: ["7A", "TQ"], P7: ["7B", "Urdu"], P8: ["7C", "TQ"] },
+        Friday: { Zero: null, P1: ["6B", "Urdu"], P2: "Free", P3: ["6C", "Urdu"], P4: ["9D", "Urdu"], P5: "Free", P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Ms Sidra",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Pre-9A Islamiat", "7B TQ", "Free", "10D TQ", "Pre-9D TQ", "BREAK", "9A Islamiat", "7B Islamiat", "Pre-9A Islamiat", "Free"],
-        Tuesday: ["Free", "7B TQ", "Free", "10D TQ", "Pre-9D TQ", "BREAK", "9A Islamiat", "9A TQ", "Pre-9A Islamiat", "Free"],
-        Wednesday: ["9A TQ", "7B TQ", "Free", "10D TQ", "Pre-9D TQ", "BREAK", "9A Islamiat", "7B Islamiat", "Pre-9A Islamiat", "Free"],
-        Thursday: ["Free", "7B TQ", "Free", "10D TQ", "Pre-9D TQ", "BREAK", "9A Islamiat", "9A TQ", "Pre-9A Islamiat", "Free"],
-        Friday: ["", "7B Islamiat", "Free", "Free", "Free", "BREAK", "9A Islamiat", "9A TQ", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["Pre-9A", "Islamiat"], P1: ["7B", "TQ"], P2: "Free", P3: ["10D", "TQ"], P4: ["Pre-9D", "TQ"], P5: ["9A", "Islamiat"], P6: ["7B", "Islamiat"], P7: ["Pre-9A", "Islamiat"], P8: "Free" },
+        Tuesday: { Zero: "Free", P1: ["7B", "TQ"], P2: "Free", P3: ["10D", "TQ"], P4: ["Pre-9D", "TQ"], P5: ["9A", "Islamiat"], P6: ["9A", "TQ"], P7: ["Pre-9A", "Islamiat"], P8: "Free" },
+        Wednesday: { Zero: ["9A", "TQ"], P1: ["7B", "TQ"], P2: "Free", P3: ["10D", "TQ"], P4: ["Pre-9D", "TQ"], P5: ["9A", "Islamiat"], P6: ["7B", "Islamiat"], P7: ["Pre-9A", "Islamiat"], P8: "Free" },
+        Thursday: { Zero: "Free", P1: ["7B", "TQ"], P2: "Free", P3: ["10D", "TQ"], P4: ["Pre-9D", "TQ"], P5: ["9A", "Islamiat"], P6: ["9A", "TQ"], P7: ["Pre-9A", "Islamiat"], P8: "Free" },
+        Friday: { Zero: null, P1: ["7B", "Islamiat"], P2: "Free", P3: "Free", P4: "Free", P5: ["9A", "Islamiat"], P6: ["9A", "TQ"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Talib",
       weeklyLoad: 18,
-      schedule: {
-        Monday: ["Free", "Free", "Free", "6A S.D", "Free", "BREAK", "Free", "6E S.D", "7A Sports", "Free"],
-        Tuesday: ["Free", "Free", "Free", "6A Sports", "6B Sports", "BREAK", "10D Sports", "Free", "6F S.D", "Free"],
-        Wednesday: ["Free", "Free", "7E Sports", "10A Sports", "6C Sports", "BREAK", "Free", "Free", "Free", "Free"],
-        Thursday: ["Free", "Free", "6D S.D", "Free", "6B S.D", "BREAK", "10C Sports", "7B Sports", "Free", "Free"],
-        Friday: ["", "Free", "10B Sports", "7C Sports", "6C S.D", "BREAK", "Free", "7D Sports", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["6A", "S.D"], P4: "Free", P5: "Free", P6: ["6E", "S.D"], P7: ["7A", "Sports"], P8: "Free" },
+        Tuesday: { Zero: "Free", P1: "Free", P2: "Free", P3: ["6A", "Sports"], P4: ["6B", "Sports"], P5: ["10D", "Sports"], P6: "Free", P7: ["6F", "S.D"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: "Free", P2: ["7E", "Sports"], P3: ["10A", "Sports"], P4: ["6C", "Sports"], P5: "Free", P6: "Free", P7: "Free", P8: "Free" },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["6D", "S.D"], P3: "Free", P4: ["6B", "S.D"], P5: ["10C", "Sports"], P6: ["7B", "Sports"], P7: "Free", P8: "Free" },
+        Friday: { Zero: null, P1: "Free", P2: ["10B", "Sports"], P3: ["7C", "Sports"], P4: ["6C", "S.D"], P5: "Free", P6: ["7D", "Sports"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Umair",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["Free", "10B Computer", "Free", "Free", "9C Computer", "BREAK", "10D Computer", "Pre-9C Computer", "9D Computer", "Pre-9D Computer"],
-        Tuesday: ["Free", "10B Computer", "Free", "Free", "9C Computer", "BREAK", "Free", "Pre-9C Computer", "9D Computer", "Pre-9D Computer"],
-        Wednesday: ["Free", "10B Computer", "Free", "Free", "9C Computer", "BREAK", "10D Computer", "Pre-9C Computer", "9D Computer", "Pre-9D Computer"],
-        Thursday: ["Pre-9D Computer", "10B Computer", "10D Computer", "Free", "9C Computer", "BREAK", "10D Computer", "Pre-9C Computer", "9D Computer", "Pre-9D Computer"],
-        Friday: ["", "10B Computer", "Free", "10D Computer", "9C Computer", "BREAK", "9D Computer", "Pre-9C Computer", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["10B", "Computer"], P2: "Free", P3: "Free", P4: ["9C", "Computer"], P5: ["10D", "Computer"], P6: ["Pre-9C", "Computer"], P7: ["9D", "Computer"], P8: ["Pre-9D", "Computer"] },
+        Tuesday: { Zero: "Free", P1: ["10B", "Computer"], P2: "Free", P3: "Free", P4: ["9C", "Computer"], P5: "Free", P6: ["Pre-9C", "Computer"], P7: ["9D", "Computer"], P8: ["Pre-9D", "Computer"] },
+        Wednesday: { Zero: "Free", P1: ["10B", "Computer"], P2: "Free", P3: "Free", P4: ["9C", "Computer"], P5: ["10D", "Computer"], P6: ["Pre-9C", "Computer"], P7: ["9D", "Computer"], P8: ["Pre-9D", "Computer"] },
+        Thursday: { Zero: ["Pre-9D", "Computer"], P1: ["10B", "Computer"], P2: ["10D", "Computer"], P3: "Free", P4: ["9C", "Computer"], P5: ["10D", "Computer"], P6: ["Pre-9C", "Computer"], P7: ["9D", "Computer"], P8: ["Pre-9D", "Computer"] },
+        Friday: { Zero: null, P1: ["10B", "Computer"], P2: "Free", P3: ["10D", "Computer"], P4: ["9C", "Computer"], P5: ["9D", "Computer"], P6: ["Pre-9C", "Computer"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Uzma",
       weeklyLoad: 23,
-      schedule: {
-        Monday: ["Free", "Free", "6C TQ", "Free", "6B Art", "BREAK", "Free", "6A TQ", "6F Art", "7B Art"],
-        Tuesday: ["Free", "Free", "6C TQ", "Free", "7E Art", "BREAK", "6B TQ", "6A TQ", "Free", "7D Art"],
-        Wednesday: ["Free", "Free", "6C TQ", "Free", "6D Art", "BREAK", "6B TQ", "6A TQ", "Free", "Free"],
-        Thursday: ["Free", "Free", "6C TQ", "7C Art", "Free", "BREAK", "6B TQ", "6A TQ", "Free", "6E Art"],
-        Friday: ["", "Free", "6C Art", "Free", "7A Art", "BREAK", "6B TQ", "6A Art", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: "Free", P2: ["6C", "TQ"], P3: "Free", P4: ["6B", "Art"], P5: "Free", P6: ["6A", "TQ"], P7: ["6F", "Art"], P8: ["7B", "Art"] },
+        Tuesday: { Zero: "Free", P1: "Free", P2: ["6C", "TQ"], P3: "Free", P4: ["7E", "Art"], P5: ["6B", "TQ"], P6: ["6A", "TQ"], P7: "Free", P8: ["7D", "Art"] },
+        Wednesday: { Zero: "Free", P1: "Free", P2: ["6C", "TQ"], P3: "Free", P4: ["6D", "Art"], P5: ["6B", "TQ"], P6: ["6A", "TQ"], P7: "Free", P8: "Free" },
+        Thursday: { Zero: "Free", P1: "Free", P2: ["6C", "TQ"], P3: ["7C", "Art"], P4: "Free", P5: ["6B", "TQ"], P6: ["6A", "TQ"], P7: "Free", P8: ["6E", "Art"] },
+        Friday: { Zero: null, P1: "Free", P2: ["6C", "Art"], P3: "Free", P4: ["7A", "Art"], P5: ["6B", "TQ"], P6: ["6A", "Art"], P7: null, P8: null },
+      },
     },
     {
       name: "Mr Waseem Abbas",
       weeklyLoad: 28,
-      schedule: {
-        Monday: ["10D Physics", "Pre-9A Physics", "9E Physics", "Free", "10B Physics", "BREAK", "9B Physics", "Free", "9B Physics", "10D Physics"],
-        Tuesday: ["Pre-9A Physics", "Pre-9A Physics", "9E Physics", "Free", "10B Physics", "BREAK", "9B Physics", "Free", "Free", "10D Physics"],
-        Wednesday: ["10D Physics", "Pre-9A Physics", "9E Physics", "Free", "10B Physics", "BREAK", "9B Physics", "Free", "Free", "10D Physics"],
-        Thursday: ["9E Physics", "Pre-9A Physics", "9E Physics", "Free", "Free", "BREAK", "9B Physics", "Free", "10B Physics", "Free"],
-        Friday: ["", "Pre-9A Physics", "9E Physics", "Free", "10B Physics", "BREAK", "9B Physics", "Free", "", ""]
-      }
+      days: {
+        Monday: { Zero: ["10D", "Physics"], P1: ["Pre-9A", "Physics"], P2: ["9E", "Physics"], P3: "Free", P4: ["10B", "Physics"], P5: ["9B", "Physics"], P6: "Free", P7: ["9B", "Physics"], P8: ["10D", "Physics"] },
+        Tuesday: { Zero: ["Pre-9A", "Physics"], P1: ["Pre-9A", "Physics"], P2: ["9E", "Physics"], P3: "Free", P4: ["10B", "Physics"], P5: ["9B", "Physics"], P6: "Free", P7: "Free", P8: ["10D", "Physics"] },
+        Wednesday: { Zero: ["10D", "Physics"], P1: ["Pre-9A", "Physics"], P2: ["9E", "Physics"], P3: "Free", P4: ["10B", "Physics"], P5: ["9B", "Physics"], P6: "Free", P7: "Free", P8: ["10D", "Physics"] },
+        Thursday: { Zero: ["9E", "Physics"], P1: ["Pre-9A", "Physics"], P2: ["9E", "Physics"], P3: "Free", P4: "Free", P5: ["9B", "Physics"], P6: "Free", P7: ["10B", "Physics"], P8: "Free" },
+        Friday: { Zero: null, P1: ["Pre-9A", "Physics"], P2: ["9E", "Physics"], P3: "Free", P4: ["10B", "Physics"], P5: ["9B", "Physics"], P6: "Free", P7: null, P8: null },
+      },
     },
     {
       name: "Mr Waseem Israr",
       weeklyLoad: 30,
-      schedule: {
-        Monday: ["Free", "Pre-9B Chemistry", "9A Chemistry", "Pre-9C Chemistry", "7D TQ", "BREAK", "Free", "10D Chemistry", "Pre-9E Chemistry", "Free"],
-        Tuesday: ["Pre-9E Chemistry", "Pre-9B Chemistry", "9A Chemistry", "Pre-9C Chemistry", "7D TQ", "BREAK", "Free", "10D Chemistry", "Pre-9E Chemistry", "Free"],
-        Wednesday: ["Free", "Pre-9B Chemistry", "9A Chemistry", "Pre-9C Chemistry", "7D TQ", "BREAK", "Free", "10D Chemistry", "Pre-9E Chemistry", "Free"],
-        Thursday: ["Pre-9C Chemistry", "Pre-9B Chemistry", "9A Chemistry", "Free", "7D TQ", "BREAK", "Free", "10D Chemistry", "Pre-9E Chemistry", "Free"],
-        Friday: ["", "Pre-9B Chemistry", "9A Chemistry", "Pre-9C Chemistry", "Free", "BREAK", "10D Chemistry", "10D Chemistry", "", ""]
-      }
+      days: {
+        Monday: { Zero: "Free", P1: ["Pre-9B", "Chemistry"], P2: ["9A", "Chemistry"], P3: ["Pre-9C", "Chemistry"], P4: ["7D", "TQ"], P5: "Free", P6: ["10D", "Chemistry"], P7: ["Pre-9E", "Chemistry"], P8: "Free" },
+        Tuesday: { Zero: ["Pre-9E", "Chemistry"], P1: ["Pre-9B", "Chemistry"], P2: ["9A", "Chemistry"], P3: ["Pre-9C", "Chemistry"], P4: ["7D", "TQ"], P5: "Free", P6: ["10D", "Chemistry"], P7: ["Pre-9E", "Chemistry"], P8: "Free" },
+        Wednesday: { Zero: "Free", P1: ["Pre-9B", "Chemistry"], P2: ["9A", "Chemistry"], P3: ["Pre-9C", "Chemistry"], P4: ["7D", "TQ"], P5: "Free", P6: ["10D", "Chemistry"], P7: ["Pre-9E", "Chemistry"], P8: "Free" },
+        Thursday: { Zero: ["Pre-9C", "Chemistry"], P1: ["Pre-9B", "Chemistry"], P2: ["9A", "Chemistry"], P3: "Free", P4: ["7D", "TQ"], P5: "Free", P6: ["10D", "Chemistry"], P7: ["Pre-9E", "Chemistry"], P8: "Free" },
+        Friday: { Zero: null, P1: ["Pre-9B", "Chemistry"], P2: ["9A", "Chemistry"], P3: ["Pre-9C", "Chemistry"], P4: "Free", P5: ["10D", "Chemistry"], P6: ["10D", "Chemistry"], P7: null, P8: null },
+      },
     },
     {
       name: "Ms Zartashia",
       weeklyLoad: 29,
-      schedule: {
-        Monday: ["Free", "7D Urdu", "Free", "6F Urdu", "10A Urdu", "BREAK", "7A Urdu", "7D Islamiat", "Free", "6F Islamiat"],
-        Tuesday: ["Free", "7D Urdu", "7A Islamiat", "6F Urdu", "10A Urdu", "BREAK", "7A Urdu", "7D Islamiat", "Free", "6F Islamiat"],
-        Wednesday: ["Free", "7D Urdu", "7A Islamiat", "6F Urdu", "10A Urdu", "BREAK", "7A Urdu", "7D Islamiat", "10A Urdu", "6F Islamiat"],
-        Thursday: ["Free", "7D Urdu", "7A Islamiat", "6F Urdu", "Free", "BREAK", "7A Urdu", "Free", "Free", "Free"],
-        Friday: ["", "7D Urdu", "Free", "6F Urdu", "10A Urdu", "BREAK", "7A Urdu", "Free", "", ""]
-      }
-    }
+      days: {
+        Monday: { Zero: "Free", P1: ["7D", "Urdu"], P2: "Free", P3: ["6F", "Urdu"], P4: ["10A", "Urdu"], P5: ["7A", "Urdu"], P6: ["7D", "Islamiat"], P7: "Free", P8: ["6F", "Islamiat"] },
+        Tuesday: { Zero: "Free", P1: ["7D", "Urdu"], P2: ["7A", "Islamiat"], P3: ["6F", "Urdu"], P4: ["10A", "Urdu"], P5: ["7A", "Urdu"], P6: ["7D", "Islamiat"], P7: "Free", P8: ["6F", "Islamiat"] },
+        Wednesday: { Zero: "Free", P1: ["7D", "Urdu"], P2: ["7A", "Islamiat"], P3: ["6F", "Urdu"], P4: ["10A", "Urdu"], P5: ["7A", "Urdu"], P6: ["7D", "Islamiat"], P7: ["10A", "Urdu"], P8: ["6F", "Islamiat"] },
+        Thursday: { Zero: "Free", P1: ["7D", "Urdu"], P2: ["7A", "Islamiat"], P3: ["6F", "Urdu"], P4: "Free", P5: ["7A", "Urdu"], P6: "Free", P7: "Free", P8: "Free" },
+        Friday: { Zero: null, P1: ["7D", "Urdu"], P2: "Free", P3: ["6F", "Urdu"], P4: ["10A", "Urdu"], P5: ["7A", "Urdu"], P6: "Free", P7: null, P8: null },
+      },
+    },
   ],
-  adjustmentsNote: "Lesson positions are exactly as in the original class-wise PDF. Break position is after Period 4 (11:25-11:45 Mon-Thu, 11:05-11:30 Fri). Total weekly lessons: 1,006."
 };
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = TIMETABLE_DATA;
-}
+if (typeof module !== "undefined") module.exports = TIMETABLE;
