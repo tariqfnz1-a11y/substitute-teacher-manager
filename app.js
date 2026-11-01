@@ -1,42 +1,36 @@
-
 /* =========================================================
    ATH CAMPUS SUBSTITUTE TEACHER MANAGER
    Academic Session: 2026–27
-   Timetable: Monday–Thursday (Zero + 1–8)
-             Friday (1–6)
+   Data source: timetable.js  (TIMETABLE.teachers[...].days[day][period])
+   Slot values: [class, subject] = teaching | "Free" | null = no period
    ========================================================= */
 
-const DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday"
-];
+const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-const WEEKDAY_PERIODS = [
-  "0", "1", "2", "3", "4", "5", "6", "7", "8"
-];
+const WEEKDAY_PERIODS = ["Zero", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"];
+const FRIDAY_PERIODS  = ["P1", "P2", "P3", "P4", "P5", "P6"];
 
-const FRIDAY_PERIODS = [
-  "1", "2", "3", "4", "5", "6"
-];
+const PERIOD_NAMES = {
+  Zero: "Zero Period",
+  P1: "Period 1", P2: "Period 2", P3: "Period 3", P4: "Period 4",
+  P5: "Period 5", P6: "Period 6", P7: "Period 7", P8: "Period 8"
+};
 
-const PERIODS = [
-  "0", "1", "2", "3", "4", "Break",
-  "5", "6", "7", "8"
-];
-
-const PERIOD_LABELS = {
-  "0": "Zero Period",
-  "1": "Period 1",
-  "2": "Period 2",
-  "3": "Period 3",
-  "4": "Period 4",
-  "5": "Period 5",
-  "6": "Period 6",
-  "7": "Period 7",
-  "8": "Period 8"
+/* Approximate period times (P3/P4 on Friday and P5/P6 on Mon–Thu
+   are split evenly inside the bell-time blocks). */
+const PERIOD_TIMES = {
+  weekday: {
+    Zero: "8:55–9:25",
+    P1: "9:25–9:55",   P2: "9:55–10:25",
+    P3: "10:25–10:55", P4: "10:55–11:25",
+    P5: "11:45–12:15", P6: "12:15–12:45",
+    P7: "12:45–1:10",  P8: "1:10–1:35"
+  },
+  friday: {
+    P1: "8:55–9:30",   P2: "9:30–10:05",
+    P3: "10:05–10:35", P4: "10:35–11:05",
+    P5: "11:30–12:00", P6: "12:00–12:30"
+  }
 };
 
 const STORAGE_KEY = "substitutionPlans";
@@ -60,70 +54,94 @@ const $ = id => document.getElementById(id);
    ========================================================= */
 
 function periodsForDay(day) {
-  return day === "Friday"
-    ? FRIDAY_PERIODS
-    : WEEKDAY_PERIODS;
+  return day === "Friday" ? FRIDAY_PERIODS : WEEKDAY_PERIODS;
 }
 
-function periodLabel(period) {
-  return PERIOD_LABELS[String(period)] || `Period ${period}`;
+function periodLabel(period, day) {
+  const name = PERIOD_NAMES[period] || period;
+  if (!day) return name;
+  const times = day === "Friday" ? PERIOD_TIMES.friday : PERIOD_TIMES.weekday;
+  return times[period] ? `${name} (${times[period]})` : name;
+}
+
+function teacherRecords() {
+  if (typeof TIMETABLE === "undefined" || !Array.isArray(TIMETABLE.teachers)) {
+    return [];
+  }
+  return TIMETABLE.teachers;
+}
+
+const teacherMap = {};
+
+function buildTeacherMap() {
+  teacherRecords().forEach(t => { teacherMap[t.name] = t; });
 }
 
 function teachers() {
-  if (typeof TIMETABLE === "undefined" || !Array.isArray(TIMETABLE)) {
-    return [];
+  return teacherRecords()
+    .map(t => t.name)
+    .sort((a, b) => a.localeCompare(b));
+}
+
+/* Returns [class, subject], "Free", null, or undefined (unknown) */
+function getSlot(day, teacher, period) {
+  const t = teacherMap[teacher];
+  if (!t || !t.days || !t.days[day]) return undefined;
+  return t.days[day][period];
+}
+
+function isTeaching(slot) {
+  return Array.isArray(slot);
+}
+
+function isFree(slot) {
+  return slot === "Free";
+}
+
+/* Main subject = the subject a teacher teaches most often */
+const mainSubjectCache = {};
+
+function mainSubject(teacher) {
+  if (mainSubjectCache[teacher] !== undefined) return mainSubjectCache[teacher];
+
+  const counts = {};
+  const t = teacherMap[teacher];
+
+  if (t) {
+    DAYS.forEach(day => {
+      Object.values(t.days[day] || {}).forEach(slot => {
+        if (isTeaching(slot) && slot[1]) {
+          counts[slot[1]] = (counts[slot[1]] || 0) + 1;
+        }
+      });
+    });
   }
 
-  return [
-    ...new Set(
-      TIMETABLE
-        .map(x => String(x.Teacher || "").trim())
-        .filter(Boolean)
+  const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  mainSubjectCache[teacher] = best ? best[0] : "";
+  return mainSubjectCache[teacher];
+}
+
+/* Teachers already approved as substitutes for this day/period */
+function approvedAssigned(day, period, ignoreAbsent = []) {
+  return approved
+    .filter(r =>
+      r.Day === day &&
+      r.Period === period &&
+      !ignoreAbsent.includes(r["Absent Teacher"]) &&
+      r.Substitute
     )
-  ].sort();
-}
-
-function rows(day, teacher) {
-  return TIMETABLE.filter(x =>
-    x.Day === day &&
-    String(x.Teacher).trim() === teacher
-  );
-}
-
-function getCell(day, teacher, period) {
-  return TIMETABLE.find(x =>
-    x.Day === day &&
-    String(x.Teacher).trim() === teacher &&
-    String(x.Period).trim() === String(period)
-  ) || null;
-}
-
-function isFree(row) {
-  if (!row) return false;
-
-  const status = String(row.Status || "").trim().toLowerCase();
-  const className = String(row.Class || "").trim();
-
-  return (
-    status === "free" ||
-    status === "available" ||
-    (!className && !status)
-  );
+    .map(r => r.Substitute);
 }
 
 function getFree(day, period, absent = [], already = []) {
-  if (!periodsForDay(day).includes(String(period))) {
-    return [];
-  }
+  if (!periodsForDay(day).includes(period)) return [];
 
   return teachers().filter(teacher => {
     if (absent.includes(teacher)) return false;
     if (already.includes(teacher)) return false;
-
-    const record = getCell(day, teacher, period);
-
-    // Missing timetable records are NOT assumed to be free.
-    return record !== null && isFree(record);
+    // Only periods explicitly marked Free in the timetable qualify.
+    return isFree(getSlot(day, teacher, period));
   });
 }
 
@@ -132,21 +150,13 @@ function getFree(day, period, absent = [], already = []) {
    SUBJECT MATCHING
    ========================================================= */
 
-function subjectScore(target, candidate) {
-  const a = String(target.Subject || "")
-    .toLowerCase()
-    .replace(/\s/g, "");
-
-  const b = String(candidate.Subject || "")
-    .toLowerCase()
-    .replace(/\s/g, "");
+function subjectScore(targetSubject, candidate) {
+  const a = String(targetSubject || "").toLowerCase().replace(/\s/g, "");
+  const b = String(mainSubject(candidate) || "").toLowerCase().replace(/\s/g, "");
 
   if (!a || !b) return 0;
-
   if (a === b) return 50;
-
   if (a.slice(0, 3) === b.slice(0, 3)) return 15;
-
   return 0;
 }
 
@@ -172,19 +182,15 @@ function escapeHtml(value) {
 
 function populateTeachers() {
   const box = $("absentTeachers");
-
   box.innerHTML = "";
 
   teachers().forEach(teacher => {
     const label = document.createElement("label");
-
     label.className = "teacher-chip";
-
     label.innerHTML = `
       <input type="checkbox" value="${escapeHtml(teacher)}">
       <span>${escapeHtml(teacher)}</span>
     `;
-
     box.appendChild(label);
   });
 }
@@ -198,535 +204,35 @@ function generate() {
   const day = $("day").value;
 
   const absent = [
-    ...document.querySelectorAll(
-      "#absentTeachers input:checked"
-    )
+    ...document.querySelectorAll("#absentTeachers input:checked")
   ].map(input => input.value);
 
   if (!absent.length) {
-    $("message").textContent =
-      "Select at least one absent teacher.";
-
+    $("message").textContent = "Select at least one absent teacher.";
     return;
   }
 
   const generated = [];
   const workload = {};
 
+  // Existing approved duties for the day (excluding plans being replaced)
   approved
-    .filter(record => record.Day === day)
-    .forEach(record => {
-      if (record.Substitute) {
-        workload[record.Substitute] =
-          (workload[record.Substitute] || 0) + 1;
-      }
+    .filter(r => r.Day === day && !absent.includes(r["Absent Teacher"]))
+    .forEach(r => {
+      if (r.Substitute) workload[r.Substitute] = (workload[r.Substitute] || 0) + 1;
     });
 
-  const validPeriods = periodsForDay(day);
+  periodsForDay(day).forEach(period => {
 
-  absent.forEach(absentTeacher => {
+    absent.forEach(absentTeacher => {
+      const slot = getSlot(day, absentTeacher, period);
+      if (!isTeaching(slot)) return;
 
-    const teachingRows = rows(day, absentTeacher)
-      .filter(record =>
-        !isFree(record) &&
-        validPeriods.includes(String(record.Period)) &&
-        String(record.Period).toLowerCase() !== "break" &&
-        String(record.Class || "").trim()
-      );
+      const [className, subject] = slot;
 
-    teachingRows.forEach(target => {
+      const alreadyAssigned = [
+        ...generated.filter(r => r.Period === period).map(r => r.Substitute),
+        ...approvedAssigned(day, period, absent)
+      ].filter(Boolean);
 
-      const period = String(target.Period);
-
-      // A teacher cannot supervise two classes in the same period.
-      const alreadyAssigned = generated
-        .filter(record => record.Period === period)
-        .map(record => record.Substitute)
-        .filter(Boolean);
-
-      const candidates = getFree(
-        day,
-        period,
-        absent,
-        alreadyAssigned
-      );
-
-      let best = "";
-      let bestScore = -1;
-      let bestReason = "No free teacher available";
-
-      candidates.forEach(candidate => {
-
-        const candidateRow = getCell(
-          day,
-          candidate,
-          period
-        );
-
-        const matchScore = subjectScore(
-          target,
-          candidateRow
-        );
-
-        const workloadScore = Math.max(
-          0,
-          20 - (workload[candidate] || 0) * 5
-        );
-
-        const totalScore = matchScore + workloadScore;
-
-        if (totalScore > bestScore) {
-          bestScore = totalScore;
-          best = candidate;
-
-          bestReason =
-            matchScore >= 50
-              ? "Same subject + free"
-              : matchScore > 0
-                ? "Related subject + free"
-                : "Free teacher";
-        }
-      });
-
-      if (best) {
-        workload[best] = (workload[best] || 0) + 1;
-      }
-
-      generated.push({
-        Day: day,
-        Period: period,
-        "Absent Teacher": absentTeacher,
-        Class: target.Class,
-        Subject: target.Subject || "",
-        Substitute: best,
-        Reason: bestReason
-      });
-    });
-  });
-
-  window.currentPlan = generated;
-
-  renderResults(generated);
-
-  $("message").textContent = generated.length
-    ? `${generated.length} substitution duties generated. Review allocations before approval.`
-    : "No teaching periods found for the selected absent teachers.";
-}
-
-
-/* =========================================================
-   DISPLAY RECOMMENDED PLAN
-   ========================================================= */
-
-function renderResults(data) {
-  const body = $("resultsBody");
-
-  body.innerHTML = "";
-
-  if (!data.length) {
-    body.innerHTML = `
-      <tr>
-        <td colspan="6">No substitution duties to display.</td>
-      </tr>
-    `;
-
-    return;
-  }
-
-  data.forEach((record, index) => {
-
-    const tr = document.createElement("tr");
-
-    const options = `
-      <option value="">-- No substitute --</option>
-      ${teachers().map(teacher => `
-        <option value="${escapeHtml(teacher)}"
-          ${teacher === record.Substitute ? "selected" : ""}>
-          ${escapeHtml(teacher)}
-        </option>
-      `).join("")}
-    `;
-
-    tr.innerHTML = `
-      <td>${escapeHtml(periodLabel(record.Period))}</td>
-      <td>${escapeHtml(record.Class)}</td>
-      <td>${escapeHtml(record["Absent Teacher"])}</td>
-      <td>${escapeHtml(record.Subject)}</td>
-      <td>
-        <select data-index="${index}" class="sub-select">
-          ${options}
-        </select>
-      </td>
-      <td>${escapeHtml(record.Reason)}</td>
-    `;
-
-    body.appendChild(tr);
-  });
-
-  document.querySelectorAll(".sub-select").forEach(select => {
-
-    select.addEventListener("change", event => {
-
-      const index = Number(event.target.dataset.index);
-
-      window.currentPlan[index].Substitute =
-        event.target.value;
-
-      const record = window.currentPlan[index];
-
-      if (record.Substitute) {
-        record.Reason = "Manually selected — verify availability";
-      } else {
-        record.Reason = "No substitute selected";
-      }
-    });
-  });
-}
-
-
-/* =========================================================
-   VALIDATE AND APPROVE PLAN
-   ========================================================= */
-
-function validatePlan(plan) {
-  const absentTeachers = [
-    ...new Set(plan.map(x => x["Absent Teacher"]))
-  ];
-
-  const assigned = new Set();
-
-  for (const record of plan) {
-
-    if (!record.Substitute) {
-      return `No substitute selected for ${record.Class}, ${periodLabel(record.Period)}.`;
-    }
-
-    if (absentTeachers.includes(record.Substitute)) {
-      return `${record.Substitute} is marked absent and cannot be a substitute.`;
-    }
-
-    const period = String(record.Period);
-
-    if (!periodsForDay(record.Day).includes(period)) {
-      return `Invalid period ${period} for ${record.Day}.`;
-    }
-
-    const key = `${record.Day}|${period}|${record.Substitute}`;
-
-    if (assigned.has(key)) {
-      return `${record.Substitute} has been assigned more than once in the same period.`;
-    }
-
-    assigned.add(key);
-
-    const timetableRecord = getCell(
-      record.Day,
-      record.Substitute,
-      period
-    );
-
-    if (!timetableRecord || !isFree(timetableRecord)) {
-      return `${record.Substitute} is not recorded as free in ${periodLabel(period)}.`;
-    }
-  }
-
-  return "";
-}
-
-function approve() {
-  const plan = window.currentPlan || [];
-
-  if (!plan.length) {
-    $("message").textContent =
-      "Generate a substitution plan first.";
-
-    return;
-  }
-
-  const error = validatePlan(plan);
-
-  if (error) {
-    $("message").textContent =
-      `Approval blocked: ${error}`;
-
-    return;
-  }
-
-  const day = plan[0].Day;
-
-  // Replace the previous plan for the same absent teacher(s) and day.
-  const absentTeachers = [
-    ...new Set(plan.map(x => x["Absent Teacher"]))
-  ];
-
-  approved = approved.filter(record =>
-    !(record.Day === day &&
-      absentTeachers.includes(record["Absent Teacher"]))
-  );
-
-  approved.push(...plan.map(record => ({ ...record })));
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(approved)
-  );
-
-  $("message").textContent =
-    "Plan successfully approved and saved on this device.";
-
-  showWorkload();
-}
-
-
-/* =========================================================
-   INDIVIDUAL TEACHER WEEKLY TIMETABLE
-   Compatible with the revised two-column HTML table.
-   ========================================================= */
-
-function showTimetable() {
-  const teacher = $("teacherView").value;
-  const body = $("teacherTableBody");
-
-  body.innerHTML = "";
-
-  if (!teacher) {
-    body.innerHTML = `
-      <tr><td colspan="2">No teacher selected.</td></tr>
-    `;
-
-    return;
-  }
-
-  DAYS.forEach(day => {
-
-    const periods = periodsForDay(day);
-
-    periods.forEach(period => {
-
-      const record = getCell(day, teacher, period);
-
-      let status = "";
-
-      if (!record) {
-        status = "No timetable record";
-      } else if (isFree(record)) {
-        status = '<span class="free">FREE</span>';
-      } else {
-        status = `
-          <strong>${escapeHtml(record.Class)}</strong>
-          <br>
-          <small>${escapeHtml(record.Subject || "")}</small>
-        `;
-      }
-
-      const tr = document.createElement("tr");
-
-      tr.innerHTML = `
-        <td>
-          <strong>${escapeHtml(day)}</strong>
-          <br>
-          <small>${escapeHtml(periodLabel(period))}</small>
-        </td>
-        <td>${status}</td>
-      `;
-
-      body.appendChild(tr);
-    });
-  });
-}
-
-
-/* =========================================================
-   AVAILABLE TEACHERS
-   ========================================================= */
-
-function updatePeriodOptions() {
-  const day = $("freeDay").value;
-  const select = $("freePeriod");
-
-  const previous = select.value;
-  const validPeriods = periodsForDay(day);
-
-  select.innerHTML = validPeriods.map(period => `
-    <option value="${period}">
-      ${escapeHtml(periodLabel(period))}
-    </option>
-  `).join("");
-
-  if (validPeriods.includes(previous)) {
-    select.value = previous;
-  }
-
-  showFree();
-}
-
-function showFree() {
-  const day = $("freeDay").value;
-  const period = $("freePeriod").value;
-
-  const list = getFree(day, period);
-
-  $("freeCount").textContent = list.length;
-
-  $("freeList").innerHTML = list.length
-    ? list.map(teacher => `
-        <span class="free-pill">
-          ${escapeHtml(teacher)}
-        </span>
-      `).join("")
-    : "<p>No teachers recorded as free in this period.</p>";
-}
-
-
-/* =========================================================
-   APPROVED SUBSTITUTION WORKLOAD
-   ========================================================= */
-
-function showWorkload() {
-  const day = $("workDay").value;
-  const map = {};
-
-  approved
-    .filter(record => record.Day === day)
-    .forEach(record => {
-
-      if (record.Substitute) {
-        map[record.Substitute] =
-          (map[record.Substitute] || 0) + 1;
-      }
-    });
-
-  const sorted = Object.entries(map)
-    .sort((a, b) => b[1] - a[1]);
-
-  $("workloadBody").innerHTML = sorted.length
-    ? sorted.map(([teacher, count]) => `
-        <tr>
-          <td>${escapeHtml(teacher)}</td>
-          <td>${count}</td>
-        </tr>
-      `).join("")
-    : `
-        <tr>
-          <td colspan="2">
-            No approved substitutions for this day.
-          </td>
-        </tr>
-      `;
-}
-
-
-/* =========================================================
-   EXPORT APPROVED PLANS TO CSV
-   ========================================================= */
-
-function exportCSV() {
-  if (!approved.length) {
-    $("message").textContent =
-      "No approved plans to export.";
-
-    return;
-  }
-
-  const headers = [
-    "Day",
-    "Period",
-    "Absent Teacher",
-    "Class",
-    "Subject",
-    "Substitute",
-    "Reason"
-  ];
-
-  const lines = [
-    headers.join(",")
-  ].concat(
-    approved.map(record =>
-      headers.map(header => {
-        const value = String(record[header] ?? "");
-        return `"${value.replace(/"/g, '""')}"`;
-      }).join(",")
-    )
-  );
-
-  const blob = new Blob(
-    ["\uFEFF" + lines.join("\n")],
-    { type: "text/csv;charset=utf-8" }
-  );
-
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = "ATH-Substitution-Plans-2026-27.csv";
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  URL.revokeObjectURL(url);
-}
-
-
-/* =========================================================
-   PRINT PLAN
-   ========================================================= */
-
-function printPlan() {
-  window.print();
-}
-
-
-/* =========================================================
-   INITIALIZE APPLICATION
-   ========================================================= */
-
-function init() {
-
-  if (typeof TIMETABLE === "undefined" || !Array.isArray(TIMETABLE)) {
-    $("message").textContent =
-      "Error: timetable.js is missing or TIMETABLE data is not defined.";
-
-    return;
-  }
-
-  $("day").innerHTML = DAYS.map(day => `
-    <option value="${day}">${day}</option>
-  `).join("");
-
-  $("freeDay").innerHTML = DAYS.map(day => `
-    <option value="${day}">${day}</option>
-  `).join("");
-
-  $("workDay").innerHTML = DAYS.map(day => `
-    <option value="${day}">${day}</option>
-  `).join("");
-
-  $("teacherView").innerHTML = teachers().map(teacher => `
-    <option value="${escapeHtml(teacher)}">
-      ${escapeHtml(teacher)}
-    </option>
-  `).join("");
-
-  populateTeachers();
-
-  $("generate").onclick = generate;
-  $("approve").onclick = approve;
-  $("print").onclick = printPlan;
-  $("export").onclick = exportCSV;
-
-  $("teacherView").onchange = showTimetable;
-
-  $("freeDay").onchange = updatePeriodOptions;
-  $("freePeriod").onchange = showFree;
-
-  $("workDay").onchange = showWorkload;
-
-  updatePeriodOptions();
-
-  showTimetable();
-  showWorkload();
-}
-
-document.addEventListener("DOMContentLoaded", init);
+      const candidates = getFree(day, period,
