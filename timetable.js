@@ -1,6 +1,6 @@
 // Teacher-wise Timetable 2026-27 - The Trust School, ATH Campus
 // Slot values: null = no period, "Free" = free period, [class, subject] = teaching period
-const TIMETABLE = {
+var TIMETABLE = {
   school: "The Trust School - ATH Campus",
   session: "2026-27",
   days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
