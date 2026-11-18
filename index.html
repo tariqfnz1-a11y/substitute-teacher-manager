@@ -568,6 +568,140 @@ function init(){
 document.addEventListener("DOMContentLoaded",init);
 </script>
 
+  <!-- LIVE CLASS DASHBOARD -->
+<script>
+(function(){
+var CSS=`
+#liveDash{border-top:5px solid var(--green)}
+.ld-top{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-bottom:14px}
+.ld-clock{background:var(--navy-dark);color:#fff;border-radius:12px;padding:12px 20px;text-align:center;min-width:190px}
+.ld-clock .t{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.ld-clock .d{font-size:13px;opacity:.85}
+.ld-period .p{font-size:22px;font-weight:700;color:var(--navy)}
+.ld-period .r{font-size:14px;color:var(--muted)}
+.ld-stats{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.ld-stat{border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;border:1px solid}
+.ld-stat.g{background:var(--green-light);color:#12652d;border-color:#c8e6d0}
+.ld-stat.r{background:#fdeceb;color:var(--red);border-color:#f3c3be}
+.ld-stat.n{background:#f1f3f2;color:#586875;border-color:var(--border)}
+.ld-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#f8faf9;border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:13px}
+.ld-controls label{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:13px}
+.ld-controls select,.ld-controls input[type=time]{width:auto;min-height:34px;padding:5px 8px;font-size:13px;border:1px solid #cbd5d0;border-radius:8px}
+.ld-controls button{margin:0;padding:7px 12px;font-size:13px}
+.ld-bld{margin-top:16px}
+.ld-bld h3{margin:0 0 8px;font-size:16px;color:var(--navy)}
+.ld-bld h3 small{font-weight:400;margin-left:6px}
+.ld-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;padding:12px;background:#f3f6f4;border:2px dashed #c9d6cd;border-radius:12px}
+.cls{border-radius:10px;border:2px solid;padding:9px 11px;min-height:96px;display:flex;flex-direction:column;gap:3px}
+.cls .cn{font-size:19px;font-weight:700;line-height:1.1}
+.cls .ln{font-size:12.5px;line-height:1.3}
+.cls .ln b{display:block;font-size:13.5px}
+.cls .ln span{display:block;opacity:.9}
+.cls .ln+.ln{border-top:1px dashed currentColor;padding-top:4px;margin-top:2px}
+.cls.live{background:var(--green-light);border-color:var(--green);color:#0f6b2c}
+.cls.idle{background:#f1f3f2;border-color:var(--border);color:#7b8791}
+.cls.nodata{border-style:dashed}
+.cls.absent{background:#b42318;border-color:#7a1209;color:#fff;animation:ldBlink 1s ease-in-out infinite}
+@keyframes ldBlink{0%,100%{background:#b42318;box-shadow:0 0 0 0 rgba(180,35,24,.6)}50%{background:#ef4a3d;box-shadow:0 0 14px 3px rgba(239,74,61,.7)}}
+@media(prefers-reduced-motion:reduce){.cls.absent{animation:none;outline:3px solid #ffb4ad}}
+@media(max-width:600px){.ld-top{grid-template-columns:1fr}.ld-controls select,.ld-controls input[type=time]{width:100%}.ld-grid{grid-template-columns:repeat(2,1fr)}}
+`;
+var BLD=[
+ {n:"New Building – Basement",s:"Classes 7A–7D, Pre-9A–Pre-9D",c:["7A","7B","7C","7D","Pre-9A","Pre-9B","Pre-9C","Pre-9D"]},
+ {n:"New Building – Top Floor",s:"Classes 6A–6F, 7E",c:["6A","6B","6C","6D","6E","6F","7E"]},
+ {n:"Old Building – Zaheer Hall Basement",s:"Pre-9E, 9A–9E, 10C–10D",c:["Pre-9E","9A","9B","9C","9D","9E","10C","10D"]},
+ {n:"Old Building – Zaheer Hall",s:"10A–10B",c:["10A","10B"]}
+];
+/* [key, start minute, end minute] — from the bell schedule */
+var WK=[["Assembly",525,535],["Zero",535,565],["P1",565,595],["P2",595,625],["P3",625,655],["P4",655,685],["Break",685,705],["P5",705,735],["P6",735,765],["P7",765,790],["P8",790,815]];
+var FR=[["Assembly",525,535],["P1",535,570],["P2",570,605],["P3",605,635],["P4",635,665],["Break",665,690],["P5",690,720],["P6",720,750]];
+var KEY="athAbsentToday",lastSig="",hasData=null;
+var g=function(i){return document.getElementById(i)};
+var esc=function(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]})};
+var today=function(){return new Date().toLocaleDateString("en-CA")};
+var fmt=function(m){var h=Math.floor(m/60),mm=m%60;return(h%12||12)+":"+String(mm).padStart(2,"0")+" "+(h>=12?"PM":"AM")};
+
+function build(){
+  var st=document.createElement("style");st.textContent=CSS;document.head.appendChild(st);
+  var sec=document.createElement("section");sec.className="card";sec.id="liveDash";
+  sec.innerHTML='<h2>📡 Live Class Dashboard</h2>'+
+  '<div class="ld-top"><div class="ld-clock"><div class="t" id="ldT">--:--</div><div class="d" id="ldD"></div></div>'+
+  '<div class="ld-period"><div class="p" id="ldP"></div><div class="r" id="ldR"></div><div class="ld-stats" id="ldS"></div></div></div>'+
+  '<div class="ld-controls no-print"><label><input type="checkbox" id="ldLive" checked> Use live clock</label>'+
+  '<label>Day <select id="ldDay">'+DAYS.map(function(d){return'<option>'+d+'</option>'}).join("")+'</select></label>'+
+  '<label>Time <input type="time" id="ldTime" value="09:30"></label>'+
+  '<button type="button" class="secondary" id="ldClear">Clear absences</button>'+
+  '<small>Absent teachers come from “Select Absent Teacher(s)” below and are remembered for today.</small></div>'+
+  BLD.map(function(b){return'<div class="ld-bld"><h3>'+esc(b.n)+'<small>'+esc(b.s)+'</small></h3><div class="ld-grid" data-b="'+esc(b.n)+'"></div></div>'}).join("");
+  var main=document.querySelector("main");main.insertBefore(sec,main.firstChild);
+  var cur=new Date().getDay();if(cur>=1&&cur<=5)g("ldDay").value=DAYS[cur-1];
+  ["ldLive","ldDay","ldTime"].forEach(function(i){g(i).addEventListener("change",function(){
+    var live=g("ldLive").checked;g("ldDay").disabled=live;g("ldTime").disabled=live;render()})});
+  g("ldDay").disabled=g("ldTime").disabled=true;
+  g("ldClear").onclick=function(){document.querySelectorAll("#absentTeachers input").forEach(function(i){i.checked=false});save();render()};
+  document.addEventListener("change",function(e){if(e.target.closest&&e.target.closest("#absentTeachers")){save();render()}});
+  try{var s=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(s&&s.date===today())document.querySelectorAll("#absentTeachers input").forEach(function(i){i.checked=s.names.indexOf(i.value)>-1})}catch(e){}
+}
+function absentList(){return[].map.call(document.querySelectorAll("#absentTeachers input:checked"),function(i){return i.value})}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({date:today(),names:absentList()}))}catch(e){}}
+function now(){
+  if(g("ldLive").checked){var d=new Date(),w=d.getDay();return{day:w>=1&&w<=5?DAYS[w-1]:null,sec:d.getHours()*3600+d.getMinutes()*60+d.getSeconds(),live:true}}
+  var p=(g("ldTime").value||"09:30").split(":");return{day:g("ldDay").value,sec:(+p[0]*60+ +p[1])*60,live:false};
+}
+function scanData(){
+  hasData={};
+  teacherRecords().forEach(function(t){DAYS.forEach(function(d){Object.keys(t.days[d]||{}).forEach(function(p){var s=t.days[d][p];if(Array.isArray(s))hasData[s[0]]=1})})});
+}
+function subFor(day,key,teacher,cls){
+  var f=function(r){return r.Day===day&&r.Period===key&&r["Absent Teacher"]===teacher&&r.Class===cls&&r.Substitute};
+  var a=approved.find(f);if(a)return{n:a.Substitute,ok:true};
+  var c=(window.currentPlan||[]).find(f);return c?{n:c.Substitute,ok:false}:null;
+}
+function line(e,day,key,abs){
+  var pre="";
+  if(abs.indexOf(e.t)>-1){var s=subFor(day,key,e.t,e.cls);
+    return{abs:true,cov:!!s,h:'<div class="ln"><b>'+esc(pre)+'ABSENT: '+esc(e.t)+'</b><span>'+(s?'Sub: '+esc(s.n)+(s.ok?'':' (proposed)'):'No substitute assigned')+'</span></div>'}}
+  return{h:'<div class="ln"><b>'+esc(pre+e.t)+'</b><span>'+esc(e.s||"")+'</span></div>'};
+}
+function render(){
+  if(!hasData)scanData();
+  var n=now(),slots=n.day==="Friday"?FR:WK,mins=n.sec/60,cur=null;
+  if(n.day)for(var i=0;i<slots.length;i++)if(mins>=slots[i][1]&&mins<slots[i][2]){cur=slots[i];break}
+  var d=new Date();
+  var h=Math.floor(n.sec/3600),m=Math.floor(n.sec%3600/60),sc=n.sec%60;
+  g("ldT").textContent=(h%12||12)+":"+String(m).padStart(2,"0")+(n.live?":"+String(sc).padStart(2,"0"):"")+" "+(h>=12?"PM":"AM");
+  g("ldD").textContent=(n.day||d.toLocaleDateString("en-GB",{weekday:"long"}))+(n.live?" · "+d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):" · preview");
+  var teaching=cur&&cur[0]!=="Assembly"&&cur[0]!=="Break",label,note="";
+  if(!n.day){label="No school today";note="Weekend — choose a day under “Use live clock” to preview."}
+  else if(!cur){label=mins<525?"School has not started":"School dismissed";note=mins<525?"Assembly starts at 8:45 AM":"Dispersal was at "+fmt(slots[slots.length-1][2])}
+  else{label=teaching?(PERIOD_NAMES[cur[0]]||cur[0]):cur[0];
+    var rem=cur[2]*60-n.sec;note=fmt(cur[1])+" – "+fmt(cur[2])+" · "+(n.live?Math.floor(rem/60)+":"+String(rem%60).padStart(2,"0")+" left":Math.ceil(rem/60)+" min left")}
+  g("ldP").textContent=label;g("ldR").textContent=note;
+  var abs=absentList(),key=cur?cur[0]:"-";
+  var sig=[n.day,key,abs.join(),approved.length,JSON.stringify((window.currentPlan||[]).map(function(r){return r.Substitute}))].join("|");
+  if(sig===lastSig)return;lastSig=sig;
+  var map={};
+  if(teaching)teacherRecords().forEach(function(t){var s=getSlot(n.day,t.name,key);if(Array.isArray(s))(map[s[0]]=map[s[0]]||[]).push({t:t.name,s:s[1],cls:s[0]})});
+  var cnt={g:0,r:0,u:0,n:0};
+  document.querySelectorAll("#liveDash .ld-grid").forEach(function(grid){
+    var b=BLD.filter(function(x){return x.n===grid.getAttribute("data-b")})[0];
+    grid.innerHTML=b.c.map(function(c){
+      var es=map[c]||[];
+      if(!es.length){cnt.n++;
+        var t=!hasData[c]?"No timetable data":!n.day?"No school today":!cur?label:!teaching?cur[0]:"No class this period";
+        return'<div class="cls idle'+(hasData[c]?"":" nodata")+'"><div class="cn">'+c+'</div><div class="ln"><b>'+esc(t)+'</b></div></div>'}
+      var ls=es.map(function(e){return line(e,n.day,key,abs)}),isAbs=ls.some(function(l){return l.abs});
+      if(isAbs){cnt.r++;if(ls.some(function(l){return l.abs&&!l.cov}))cnt.u++}else cnt.g++;
+      return'<div class="cls '+(isAbs?"absent":"live")+'"><div class="cn">'+c+'</div>'+ls.map(function(l){return l.h}).join("")+'</div>'}).join("");
+  });
+  g("ldS").innerHTML='<span class="ld-stat g">'+cnt.g+' with teacher</span><span class="ld-stat r">'+cnt.r+' absent'+(cnt.u?' · '+cnt.u+' uncovered':'')+'</span><span class="ld-stat n">'+cnt.n+' no class</span>';
+}
+function start(){build();render();setInterval(render,1000)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
+})();
+</script>
+
   <noscript>
     <p>
       JavaScript must be enabled to use the Substitute Teacher Manager.
